@@ -1,0 +1,178 @@
+[
+  {
+    "name": "analytics-screen",
+    "id": 34804005,
+    "description": "Laptop displaying coding and data analysis interface",
+    "topic": "analytics",
+    "src": "/images/card-photos/analytics-screen.jpg",
+    "source": "https://www.pexels.com/photo/34804005/"
+  },
+  {
+    "name": "analysis-team",
+    "id": 7651819,
+    "description": "Colleagues reviewing charts and analytics",
+    "topic": "analytics",
+    "src": "/images/card-photos/analysis-team.jpg",
+    "source": "https://www.pexels.com/photo/7651819/"
+  },
+  {
+    "name": "financial-report",
+    "id": 9304917,
+    "description": "Financial report with charts and graphs",
+    "topic": "finance",
+    "src": "/images/card-photos/financial-report.jpg",
+    "source": "https://www.pexels.com/photo/9304917/"
+  },
+  {
+    "name": "python-workspace",
+    "id": 5483075,
+    "description": "Hands coding on a laptop",
+    "topic": "code",
+    "src": "/images/card-photos/python-workspace.jpg",
+    "source": "https://www.pexels.com/photo/5483075/"
+  },
+  {
+    "name": "developer-laptop",
+    "id": 7988114,
+    "description": "Developer working on programming scripts",
+    "topic": "code",
+    "src": "/images/card-photos/developer-laptop.jpg",
+    "source": "https://www.pexels.com/photo/7988114/"
+  },
+  {
+    "name": "code-screen",
+    "id": 6424589,
+    "description": "Colourful programming code on screen",
+    "topic": "code",
+    "src": "/images/card-photos/code-screen.jpg",
+    "source": "https://www.pexels.com/photo/6424589/"
+  },
+  {
+    "name": "data-centre",
+    "id": 4508751,
+    "description": "Data centre with server racks",
+    "topic": "database",
+    "src": "/images/card-photos/data-centre.jpg",
+    "source": "https://www.pexels.com/photo/4508751/"
+  },
+  {
+    "name": "server-storage",
+    "id": 17489156,
+    "description": "Server rack with blue indicators",
+    "topic": "database",
+    "src": "/images/card-photos/server-storage.jpg",
+    "source": "https://www.pexels.com/photo/17489156/"
+  },
+  {
+    "name": "marketing-team",
+    "id": 17713876,
+    "description": "Marketing team planning in an office",
+    "topic": "marketing",
+    "src": "/images/card-photos/marketing-team.jpg",
+    "source": "https://www.pexels.com/photo/17713876/"
+  },
+  {
+    "name": "social-media",
+    "id": 15525898,
+    "description": "Social media on a smartphone",
+    "topic": "social",
+    "src": "/images/card-photos/social-media.jpg",
+    "source": "https://www.pexels.com/photo/15525898/"
+  },
+  {
+    "name": "marketing-workspace",
+    "id": 6483580,
+    "description": "Digital marketing workstation",
+    "topic": "marketing",
+    "src": "/images/card-photos/marketing-workspace.jpg",
+    "source": "https://www.pexels.com/photo/6483580/"
+  },
+  {
+    "name": "classroom-laptop",
+    "id": 20432916,
+    "description": "Laptop in a modern classroom",
+    "topic": "classroom",
+    "src": "/images/card-photos/classroom-laptop.jpg",
+    "source": "https://www.pexels.com/photo/20432916/"
+  },
+  {
+    "name": "interview-preparation",
+    "id": 7644155,
+    "description": "Professional job interview",
+    "topic": "career",
+    "src": "/images/card-photos/interview-preparation.jpg",
+    "source": "https://www.pexels.com/photo/7644155/"
+  },
+  {
+    "name": "career-consultation",
+    "id": 36733330,
+    "description": "Business consultation meeting",
+    "topic": "career",
+    "src": "/images/card-photos/career-consultation.jpg",
+    "source": "https://www.pexels.com/photo/36733330/"
+  },
+  {
+    "name": "resource-library",
+    "id": 1370295,
+    "description": "Bookshelves filled with educational resources",
+    "topic": "resources",
+    "src": "/images/card-photos/resource-library.jpg",
+    "source": "https://www.pexels.com/photo/1370295/"
+  },
+  {
+    "name": "study-space",
+    "id": 9712099,
+    "description": "People studying in a library",
+    "topic": "learning",
+    "src": "/images/card-photos/study-space.jpg",
+    "source": "https://www.pexels.com/photo/9712099/"
+  },
+  {
+    "name": "study-planner",
+    "id": 27200471,
+    "description": "Open planner and notebook",
+    "topic": "schedule",
+    "src": "/images/card-photos/study-planner.jpg",
+    "source": "https://www.pexels.com/photo/27200471/"
+  },
+  {
+    "name": "online-learning",
+    "id": 4050453,
+    "description": "Woman working on a laptop with earphones",
+    "topic": "online",
+    "src": "/images/card-photos/online-learning.jpg",
+    "source": "https://www.pexels.com/photo/4050453/"
+  },
+  {
+    "name": "remote-session",
+    "id": 4474047,
+    "description": "Woman participating in a video call",
+    "topic": "online",
+    "src": "/images/card-photos/remote-session.jpg",
+    "source": "https://www.pexels.com/photo/4474047/"
+  },
+  {
+    "name": "online-mentor",
+    "id": 6266980,
+    "description": "Woman teaching over a video conference",
+    "topic": "online",
+    "src": "/images/card-photos/online-mentor.jpg",
+    "source": "https://www.pexels.com/photo/6266980/"
+  },
+  {
+    "name": "professional-workspace",
+    "id": 4017427,
+    "description": "Woman working at a desk with a laptop",
+    "topic": "growth",
+    "src": "/images/card-photos/professional-workspace.jpg",
+    "source": "https://www.pexels.com/photo/4017427/"
+  },
+  {
+    "name": "modern-library",
+    "id": 17082091,
+    "description": "Modern library interior",
+    "topic": "resources",
+    "src": "/images/card-photos/modern-library.jpg",
+    "source": "https://www.pexels.com/photo/17082091/"
+  }
+]
