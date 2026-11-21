@@ -21,12 +21,12 @@ import {
 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getCourses, getAllCategories, createCourse, updateCourse, deleteCourse } from "@/actions/courses";
-import { CourseData, CategoryData, MOCK_CATEGORIES } from "@/lib/mock-data";
+import { CourseData, CategoryData } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
 
 export default function CourseCatalogPage() {
   const [courses, setCourses] = useState<CourseData[]>([]);
-  const [categories, setCategories] = useState<CategoryData[]>(MOCK_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryData[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Filters
@@ -38,13 +38,14 @@ export default function CourseCatalogPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<CourseData | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [listError, setListError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Form state
   const [form, setForm] = useState({
     title: "",
     slug: "",
-    categoryId: MOCK_CATEGORIES[0]?.id || "cat-fsd",
+    categoryId: categories[0]?.id || "",
     summary: "",
     duration: "12 Weeks",
     mode: "HYBRID" as CourseData["mode"],
@@ -63,7 +64,8 @@ export default function CourseCatalogPage() {
         getAllCategories(),
       ]);
       setCourses(crList);
-      if (catList && catList.length > 0) setCategories(catList);
+      setCategories(catList);
+      setForm(prev => ({...prev, categoryId: catList.some(c => c.id === prev.categoryId) ? prev.categoryId : catList[0]?.id || ""}));
     } catch (e) {
       console.error(e);
     } finally {
@@ -118,7 +120,7 @@ export default function CourseCatalogPage() {
       setForm({
         title: "",
         slug: "",
-        categoryId: MOCK_CATEGORIES[0]?.id || "cat-fsd",
+        categoryId: categories[0]?.id || "",
         summary: "",
         duration: "12 Weeks",
         mode: "HYBRID",
@@ -159,10 +161,8 @@ export default function CourseCatalogPage() {
 
   const handleToggleFeatured = (courseId: string, currentFeatured: boolean) => {
     startTransition(async () => {
-      setCourses((prev) =>
-        prev.map((c) => (c.id === courseId ? { ...c, isFeatured: !currentFeatured } : c))
-      );
-      await updateCourse(courseId, { isFeatured: !currentFeatured });
+      const result = await updateCourse(courseId, { isFeatured: !currentFeatured });
+      setListError(result.success ? null : result.message);
       loadData();
     });
   };
@@ -170,7 +170,9 @@ export default function CourseCatalogPage() {
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this course program?")) {
       startTransition(async () => {
-        await deleteCourse(id);
+        const result = await deleteCourse(id);
+        if (!result.success) { setListError(result.message); return; }
+        setListError(null);
         loadData();
       });
     }
@@ -184,6 +186,7 @@ export default function CourseCatalogPage() {
       <AdminHeader />
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        {listError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-red-700">{listError}</p>}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>

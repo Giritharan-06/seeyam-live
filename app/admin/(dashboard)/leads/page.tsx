@@ -21,6 +21,7 @@ import {
   Layers,
   FileSpreadsheet,
 } from "lucide-react";
+import { useCatalogOptions } from "@/components/admin/CatalogOptions";
 import AdminHeader from "@/components/admin/AdminHeader";
 import {
   getLeads,
@@ -29,8 +30,6 @@ import {
   exportLeadsCsv,
 } from "@/actions/leads";
 import {
-  MOCK_BRANCHES,
-  MOCK_COURSES,
   LeadData,
   LeadNote,
 } from "@/lib/mock-data";
@@ -45,6 +44,7 @@ const STATUSES: Array<LeadData["status"]> = [
 ];
 
 export default function LeadCRMPage() {
+  const { courses, branches } = useCatalogOptions();
   const [leads, setLeads] = useState<LeadData[]>([]);
   const [totalLeads, setTotalLeads] = useState(0);
   const [page, setPage] = useState(1);
@@ -253,8 +253,8 @@ export default function LeadCRMPage() {
                 }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white"
               >
-                <option value="ALL">All Branches ({MOCK_BRANCHES.length})</option>
-                {MOCK_BRANCHES.map((b) => (
+                <option value="ALL">All Branches ({branches.length})</option>
+                {branches.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name} ({b.city})
                   </option>
@@ -272,8 +272,8 @@ export default function LeadCRMPage() {
                 }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white"
               >
-                <option value="ALL">All Courses ({MOCK_COURSES.length})</option>
-                {MOCK_COURSES.map((c) => (
+                <option value="ALL">All Courses ({courses.length})</option>
+                {courses.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.title}
                   </option>
@@ -315,8 +315,8 @@ export default function LeadCRMPage() {
                   </tr>
                 ) : (
                   leads.map((lead) => {
-                    const course = MOCK_COURSES.find((c) => c.id === lead.courseId);
-                    const branch = MOCK_BRANCHES.find((b) => b.id === lead.branchId);
+                    const course = courses.find((c) => c.id === lead.courseId);
+                    const branch = branches.find((b) => b.id === lead.branchId);
 
                     return (
                       <tr
@@ -506,13 +506,13 @@ export default function LeadCRMPage() {
                     <div>
                       <div className="text-slate-400 text-[10px] uppercase font-bold">Campus</div>
                       <div className="font-semibold text-slate-800">
-                        {MOCK_BRANCHES.find((b) => b.id === selectedLead.branchId)?.name || selectedLead.branchId}
+                        {branches.find((b) => b.id === selectedLead.branchId)?.name || selectedLead.branchId}
                       </div>
                     </div>
                     <div className="col-span-2 pt-2 border-t border-slate-100">
                       <div className="text-slate-400 text-[10px] uppercase font-bold">Target Course</div>
                       <div className="font-semibold text-slate-800">
-                        {MOCK_COURSES.find((c) => c.id === selectedLead.courseId)?.title || selectedLead.courseId}
+                        {courses.find((c) => c.id === selectedLead.courseId)?.title || selectedLead.courseId}
                       </div>
                     </div>
                   </div>

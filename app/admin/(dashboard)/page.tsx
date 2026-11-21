@@ -28,13 +28,15 @@ import {
   ChevronRight,
   ShieldCheck,
 } from "lucide-react";
+import { useCatalogOptions } from "@/components/admin/CatalogOptions";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getDashboardStats, getLeads, createWalkInLead } from "@/actions/leads";
 import { getUpcomingBatches, createBatch } from "@/actions/batches";
-import { MOCK_BRANCHES, MOCK_COURSES, LeadData, BatchData } from "@/lib/mock-data";
+import { LeadData, BatchData } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 
 export default function AdminDashboardPage() {
+  const { courses, branches } = useCatalogOptions();
   const [stats, setStats] = useState<{
     totalLeads: number;
     newToday: number;
@@ -59,8 +61,8 @@ export default function AdminDashboardPage() {
     fullName: "",
     email: "",
     phone: "",
-    branchId: MOCK_BRANCHES[0]?.id || "branch-omr",
-    courseId: MOCK_COURSES[0]?.id || "course-fsd-java",
+    branchId: branches[0]?.id || "",
+    courseId: courses[0]?.id || "",
     initialNote: "",
   });
   const [walkInSubmitting, setWalkInSubmitting] = useState(false);
@@ -68,8 +70,8 @@ export default function AdminDashboardPage() {
 
   // New batch form state
   const [batchForm, setBatchForm] = useState({
-    courseId: MOCK_COURSES[0]?.id || "course-fsd-java",
-    branchId: MOCK_BRANCHES[0]?.id || "branch-omr",
+    courseId: courses[0]?.id || "",
+    branchId: branches[0]?.id || "",
     instructorName: "",
     instructorExp: "8+ Yrs Exp",
     startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
@@ -124,8 +126,8 @@ export default function AdminDashboardPage() {
         fullName: "",
         email: "",
         phone: "",
-        branchId: MOCK_BRANCHES[0]?.id || "branch-omr",
-        courseId: MOCK_COURSES[0]?.id || "course-fsd-java",
+        branchId: branches[0]?.id || "",
+        courseId: courses[0]?.id || "",
         initialNote: "",
       });
       loadData();
@@ -440,8 +442,8 @@ export default function AdminDashboardPage() {
               ) : (
                 <div className="divide-y divide-slate-100">
                   {recentLeads.map((lead) => {
-                    const course = MOCK_COURSES.find((c) => c.id === lead.courseId);
-                    const branch = MOCK_BRANCHES.find((b) => b.id === lead.branchId);
+                    const course = courses.find((c) => c.id === lead.courseId);
+                    const branch = branches.find((b) => b.id === lead.branchId);
 
                     return (
                       <div key={lead.id} className="py-3.5 flex items-center justify-between gap-4">
@@ -511,8 +513,8 @@ export default function AdminDashboardPage() {
 
               <div className="space-y-3">
                 {batches.map((batch) => {
-                  const course = MOCK_COURSES.find((c) => c.id === batch.courseId);
-                  const branch = MOCK_BRANCHES.find((b) => b.id === batch.branchId);
+                  const course = courses.find((c) => c.id === batch.courseId);
+                  const branch = branches.find((b) => b.id === batch.branchId);
 
                   return (
                     <div
@@ -630,7 +632,7 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setWalkInForm({ ...walkInForm, courseId: e.target.value })}
                     className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                   >
-                    {MOCK_COURSES.map((c) => (
+                    {courses.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.title}
                       </option>
@@ -644,7 +646,7 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setWalkInForm({ ...walkInForm, branchId: e.target.value })}
                     className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                   >
-                    {MOCK_BRANCHES.map((b) => (
+                    {branches.map((b) => (
                       <option key={b.id} value={b.id}>
                         {b.name}
                       </option>
@@ -712,7 +714,7 @@ export default function AdminDashboardPage() {
                   onChange={(e) => setBatchForm({ ...batchForm, courseId: e.target.value })}
                   className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                 >
-                  {MOCK_COURSES.map((c) => (
+                  {courses.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.title}
                     </option>
@@ -727,7 +729,7 @@ export default function AdminDashboardPage() {
                   onChange={(e) => setBatchForm({ ...batchForm, branchId: e.target.value })}
                   className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                 >
-                  {MOCK_BRANCHES.map((b) => (
+                  {branches.map((b) => (
                     <option key={b.id} value={b.id}>
                       {b.name} ({b.city})
                     </option>

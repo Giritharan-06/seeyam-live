@@ -21,12 +21,14 @@ import {
   User,
   ShieldCheck,
 } from "lucide-react";
+import { useCatalogOptions } from "@/components/admin/CatalogOptions";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getAllReviews, moderateReview, deleteReview, getReviewStats } from "@/actions/reviews";
-import { MOCK_COURSES, MOCK_BRANCHES, ReviewData } from "@/lib/mock-data";
+import { ReviewData } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 
 export default function ReviewModerationPage() {
+  const { courses, branches } = useCatalogOptions();
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [stats, setStats] = useState({
     total: 0,
@@ -96,6 +98,7 @@ export default function ReviewModerationPage() {
         adminNote: note !== undefined ? note : adminNote,
       });
 
+      if (!res.success) { setStatusMessage(res.message); return; }
       if (res.success) {
         setStatusMessage(`Review ${newStatus.toLowerCase()} successfully.`);
         if (selectedReview && selectedReview.id === reviewId) {
@@ -111,6 +114,7 @@ export default function ReviewModerationPage() {
     if (confirm("Are you sure you want to permanently delete this student review?")) {
       startTransition(async () => {
         const res = await deleteReview(reviewId);
+        if (!res.success) { setStatusMessage(res.message); return; }
         if (res.success) {
           setSelectedReview(null);
           loadData();
@@ -130,6 +134,7 @@ export default function ReviewModerationPage() {
       <AdminHeader />
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        {statusMessage && <p role="status" className="rounded-lg bg-white p-3">{statusMessage}</p>}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -219,8 +224,8 @@ export default function ReviewModerationPage() {
               onChange={(e) => setCourseFilter(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
             >
-              <option value="ALL">All Courses ({MOCK_COURSES.length})</option>
-              {MOCK_COURSES.map((c) => (
+              <option value="ALL">All Courses ({courses.length})</option>
+              {courses.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}
                 </option>
@@ -233,8 +238,8 @@ export default function ReviewModerationPage() {
               onChange={(e) => setBranchFilter(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
             >
-              <option value="ALL">All Branches ({MOCK_BRANCHES.length})</option>
-              {MOCK_BRANCHES.map((b) => (
+              <option value="ALL">All Branches ({branches.length})</option>
+              {branches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name} ({b.city})
                 </option>
@@ -290,8 +295,8 @@ export default function ReviewModerationPage() {
                   </tr>
                 ) : (
                   reviews.map((rev) => {
-                    const course = MOCK_COURSES.find((c) => c.id === rev.courseId);
-                    const branch = MOCK_BRANCHES.find((b) => b.id === rev.branchId);
+                    const course = courses.find((c) => c.id === rev.courseId);
+                    const branch = branches.find((b) => b.id === rev.branchId);
 
                     return (
                       <tr
@@ -475,14 +480,14 @@ export default function ReviewModerationPage() {
                   <div className="flex items-center gap-2">
                     <GraduationCap className="w-4 h-4 text-emerald-600" />
                     <span className="font-semibold text-slate-900">
-                      {MOCK_COURSES.find((c) => c.id === selectedReview.courseId)?.title ||
+                      {courses.find((c) => c.id === selectedReview.courseId)?.title ||
                         selectedReview.courseId}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Building2 className="w-4 h-4 text-indigo-600" />
                     <span className="text-slate-600">
-                      {MOCK_BRANCHES.find((b) => b.id === selectedReview.branchId)?.name} (Batch:{" "}
+                      {branches.find((b) => b.id === selectedReview.branchId)?.name} (Batch:{" "}
                       {selectedReview.completionYear})
                     </span>
                   </div>

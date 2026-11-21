@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getSession, hasSecureAdminConfiguration } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { BranchData } from "@/lib/mock-data";
 import { branchCreateSchema, BranchCreateInput } from "@/lib/validations/schema";
@@ -20,6 +21,8 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | undefi
 
 export async function createBranch(formData: BranchCreateInput): Promise<ActionResult<BranchData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = branchCreateSchema.safeParse(formData);
 
     if (!validated.success) {
@@ -65,6 +68,8 @@ export async function updateBranch(
   data: Partial<BranchData>
 ): Promise<ActionResult<BranchData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const updated = await db.updateBranch(id, data);
     if (!updated) {
       return {
@@ -93,6 +98,8 @@ export async function updateBranch(
 
 export async function deleteBranch(id: string): Promise<ActionResult<boolean>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const deleted = await db.deleteBranch(id);
     if (!deleted) {
       return {
@@ -114,7 +121,7 @@ export async function deleteBranch(id: string): Promise<ActionResult<boolean>> {
     console.error("deleteBranch error:", error);
     return {
       success: false,
-      message: "Failed to delete branch.",
+      message: error instanceof Error && (error.message === "LINKED_RECORD" || ("code" in error && error.code === "P2003")) ? "Other records reference this branch. Reassign those records before deleting this branch." : "Failed to delete branch.",
     };
   }
 }

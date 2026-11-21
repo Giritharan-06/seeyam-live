@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getSession, hasSecureAdminConfiguration } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { batchCreateSchema, BatchCreateInput } from "@/lib/validations/schema";
 import { BatchData } from "@/lib/mock-data";
@@ -16,6 +17,8 @@ export async function getAllBatches(branchId?: string, courseId?: string): Promi
 
 export async function createBatch(formData: BatchCreateInput): Promise<ActionResult<BatchData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = batchCreateSchema.safeParse(formData);
 
     if (!validated.success) {
@@ -61,6 +64,8 @@ export async function updateBatch(
   data: Partial<BatchData>
 ): Promise<ActionResult<BatchData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const updated = await db.updateBatch(id, data);
     if (!updated) {
       return {
@@ -90,6 +95,8 @@ export async function updateBatch(
 
 export async function deleteBatch(id: string): Promise<ActionResult<boolean>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const deleted = await db.deleteBatch(id);
     if (!deleted) {
       return {

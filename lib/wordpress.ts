@@ -485,7 +485,8 @@ function publicSettings(value: unknown): PlatformSettings {
 }
 
 export async function getSiteSettings(): Promise<PlatformSettings> {
-  const url = `${WP_HOST}/seeyam/v1/site-settings`;
+  if (!process.env.WORDPRESS_API_URL && !process.env.NEXT_PUBLIC_WORDPRESS_API_URL) return getDefaultSettings();
+  const url = WP_HOST + "/seeyam/v1/site-settings";
   try {
     const res = await fetch(url, {
       next: { revalidate: 30 },

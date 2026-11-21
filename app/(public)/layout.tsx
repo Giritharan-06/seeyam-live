@@ -1,38 +1,19 @@
-"use client";
-
-import React from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { LeadModalProvider, useLeadModal } from "@/components/LeadModalContext";
+import { getPublishedPlatform } from "@/lib/published-platform";
+import PublicShell from "@/components/PublicShell";
+import DynamicThemeProvider from "@/components/DynamicThemeProvider";
+import { LeadModalProvider } from "@/components/LeadModalContext";
 import { PlatformDataProvider } from "@/components/PlatformDataContext";
 
-import DynamicThemeProvider from "@/components/DynamicThemeProvider";
-
-import CareerDoubtBot from "@/components/CareerDoubtBot";
-
-function PublicLayoutInner({ children }: { children: React.ReactNode }) {
-  const { openLeadModal } = useLeadModal();
-
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar onOpenLeadModal={openLeadModal} />
-      <main className="flex-1">{children}</main>
-      <Footer onOpenLeadModal={openLeadModal} />
-      <CareerDoubtBot />
-    </div>
-  );
-}
-
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <PlatformDataProvider>
+    <PlatformDataProvider initial={await getPublishedPlatform()}>
       <DynamicThemeProvider>
         <LeadModalProvider>
-          <PublicLayoutInner>{children}</PublicLayoutInner>
+          <PublicShell>{children}</PublicShell>
         </LeadModalProvider>
       </DynamicThemeProvider>
     </PlatformDataProvider>

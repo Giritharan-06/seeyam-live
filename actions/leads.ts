@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getSession, hasSecureAdminConfiguration } from "@/lib/auth";
 import { db } from "@/lib/db";
 import {
   publicLeadSchema,
@@ -29,7 +30,7 @@ export interface ActionResult<T = unknown> {
  */
 export async function submitPublicLead(
   formData: PublicLeadInput
-): Promise<ActionResult<LeadData>> {
+): Promise<ActionResult<{brochureUrl: string}>> {
   try {
     const validated = publicLeadSchema.safeParse(formData);
 
@@ -62,7 +63,7 @@ export async function submitPublicLead(
       successMessage = "Demo session access link has been sent to your email and WhatsApp!";
     }
 
-    const lead = await db.createLead({
+    await db.createLead({
       fullName: validated.data.fullName,
       email: validated.data.email,
       phone: validated.data.phone,
@@ -79,7 +80,6 @@ export async function submitPublicLead(
       success: true,
       message: successMessage,
       data: {
-        ...lead,
         brochureUrl,
       },
     };
@@ -99,6 +99,8 @@ export async function createWalkInLead(
   formData: WalkInLeadInput
 ): Promise<ActionResult<LeadData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || !session) return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = walkInLeadSchema.safeParse(formData);
 
     if (!validated.success) {
@@ -151,6 +153,8 @@ export async function updateLeadStatus(
   input: LeadStatusUpdateInput
 ): Promise<ActionResult<LeadData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || !session) return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = leadStatusUpdateSchema.safeParse(input);
 
     if (!validated.success) {
@@ -164,7 +168,7 @@ export async function updateLeadStatus(
       validated.data.leadId,
       validated.data.newStatus,
       validated.data.note,
-      validated.data.author || "Counselor"
+      session.name
     );
 
     if (!updated) {
@@ -198,6 +202,8 @@ export async function addLeadNote(
   input: LeadNoteInput
 ): Promise<ActionResult<LeadData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || !session) return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = leadNoteSchema.safeParse(input);
 
     if (!validated.success) {
@@ -210,7 +216,7 @@ export async function addLeadNote(
     const updated = await db.addLeadNote(
       validated.data.leadId,
       validated.data.text,
-      validated.data.author
+      session.name
     );
 
     if (!updated) {
@@ -241,6 +247,7 @@ export async function addLeadNote(
  */
 export async function getLeads(filters: LeadFilterInput = {}) {
   try {
+    if (!hasSecureAdminConfiguration || !(await getSession())) throw new Error("Staff sign-in required.");
     const validated = leadFilterSchema.safeParse(filters);
     const params = validated.success ? validated.data : {};
     return await db.getLeads(params);
@@ -254,6 +261,7 @@ export async function getLeads(filters: LeadFilterInput = {}) {
  * Get Lead by ID
  */
 export async function getLeadById(id: string): Promise<LeadData | undefined> {
+  if (!hasSecureAdminConfiguration || !(await getSession())) throw new Error("Staff sign-in required.");
   return await db.getLeadById(id);
 }
 
@@ -261,6 +269,7 @@ export async function getLeadById(id: string): Promise<LeadData | undefined> {
  * Export Leads to CSV string
  */
 export async function exportLeadsCsv(filters: LeadFilterInput = {}): Promise<string> {
+  if (!hasSecureAdminConfiguration || !(await getSession())) throw new Error("Staff sign-in required.");
   const result = await db.getLeads({ ...filters, page: 1, pageSize: 1000 });
   const branches = await db.getBranches();
   const courses = await db.getCourses();
@@ -288,5 +297,6 @@ export async function exportLeadsCsv(filters: LeadFilterInput = {}): Promise<str
  * Get Dashboard KPI metrics
  */
 export async function getDashboardStats() {
+  if (!hasSecureAdminConfiguration || !(await getSession())) throw new Error("Staff sign-in required.");
   return await db.getStats();
 }

@@ -35,6 +35,7 @@ export default function CampusBranchesPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState<BranchData | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [listError, setListError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Form state
@@ -153,7 +154,9 @@ export default function CampusBranchesPage() {
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to remove this campus branch?")) {
       startTransition(async () => {
-        await deleteBranch(id);
+        const result = await deleteBranch(id);
+        if (!result.success) { setListError(result.message); return; }
+        setListError(null);
         loadBranches();
       });
     }
@@ -164,6 +167,7 @@ export default function CampusBranchesPage() {
       <AdminHeader />
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        {listError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-red-700">{listError}</p>}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>

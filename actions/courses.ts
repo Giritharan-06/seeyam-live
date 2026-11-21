@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getSession, hasSecureAdminConfiguration } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CourseData, CategoryData } from "@/lib/mock-data";
 import { courseCreateSchema, CourseCreateInput } from "@/lib/validations/schema";
@@ -32,6 +33,8 @@ export async function searchCourses(query: string): Promise<CourseData[]> {
 
 export async function createCourse(formData: CourseCreateInput): Promise<ActionResult<CourseData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = courseCreateSchema.safeParse(formData);
 
     if (!validated.success) {
@@ -95,6 +98,8 @@ export async function updateCourse(
   data: Partial<CourseData>
 ): Promise<ActionResult<CourseData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const updated = await db.updateCourse(id, data);
     if (!updated) {
       return {
@@ -123,6 +128,8 @@ export async function updateCourse(
 
 export async function deleteCourse(id: string): Promise<ActionResult<boolean>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const deleted = await db.deleteCourse(id);
     if (!deleted) {
       return {
@@ -144,7 +151,7 @@ export async function deleteCourse(id: string): Promise<ActionResult<boolean>> {
     console.error("deleteCourse error:", error);
     return {
       success: false,
-      message: "Failed to delete course.",
+      message: error instanceof Error && (error.message === "LINKED_RECORD" || ("code" in error && error.code === "P2003")) ? "Other records reference this course. Reassign those records before deleting this course." : "Failed to delete course.",
     };
   }
 }

@@ -19,12 +19,14 @@ import {
   Sparkles,
   Layers,
 } from "lucide-react";
+import { useCatalogOptions } from "@/components/admin/CatalogOptions";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getAllBatches, createBatch, updateBatch, deleteBatch } from "@/actions/batches";
-import { MOCK_BRANCHES, MOCK_COURSES, BatchData } from "@/lib/mock-data";
+import { BatchData } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 
 export default function BatchSchedulerPage() {
+  const { courses, branches } = useCatalogOptions();
   const [batches, setBatches] = useState<BatchData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,12 +40,13 @@ export default function BatchSchedulerPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingBatch, setEditingBatch] = useState<BatchData | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [listError, setListError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Create form state
   const [form, setForm] = useState({
-    courseId: MOCK_COURSES[0]?.id || "course-fsd-java",
-    branchId: MOCK_BRANCHES[0]?.id || "branch-omr",
+    courseId: courses[0]?.id || "",
+    branchId: branches[0]?.id || "",
     instructorName: "",
     instructorExp: "8+ Yrs Exp",
     startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
@@ -77,8 +80,8 @@ export default function BatchSchedulerPage() {
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      const course = MOCK_COURSES.find((c) => c.id === b.courseId);
-      const branch = MOCK_BRANCHES.find((br) => br.id === b.branchId);
+      const course = courses.find((c) => c.id === b.courseId);
+      const branch = branches.find((br) => br.id === b.branchId);
 
       const matchInstructor = b.instructorName.toLowerCase().includes(q);
       const matchCourse = course?.title.toLowerCase().includes(q);
@@ -110,8 +113,8 @@ export default function BatchSchedulerPage() {
     if (res.success) {
       setStatusMessage("Batch scheduled successfully!");
       setForm({
-        courseId: MOCK_COURSES[0]?.id || "course-fsd-java",
-        branchId: MOCK_BRANCHES[0]?.id || "branch-omr",
+        courseId: courses[0]?.id || "",
+        branchId: branches[0]?.id || "",
         instructorName: "",
         instructorExp: "8+ Yrs Exp",
         startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
@@ -152,10 +155,8 @@ export default function BatchSchedulerPage() {
 
   const handleStatusChange = (batchId: string, newStatus: BatchData["status"]) => {
     startTransition(async () => {
-      setBatches((prev) =>
-        prev.map((b) => (b.id === batchId ? { ...b, status: newStatus } : b))
-      );
-      await updateBatch(batchId, { status: newStatus });
+      const result = await updateBatch(batchId, { status: newStatus });
+      setListError(result.success ? null : result.message);
       loadBatches();
     });
   };
@@ -163,7 +164,9 @@ export default function BatchSchedulerPage() {
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this batch cohort?")) {
       startTransition(async () => {
-        await deleteBatch(id);
+        const result = await deleteBatch(id);
+        if (!result.success) { setListError(result.message); return; }
+        setListError(null);
         loadBatches();
       });
     }
@@ -178,6 +181,7 @@ export default function BatchSchedulerPage() {
       <AdminHeader onOpenBatchModal={() => setIsCreateModalOpen(true)} />
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        {listError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-red-700">{listError}</p>}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -206,7 +210,7 @@ export default function BatchSchedulerPage() {
               <div className="text-xs font-semibold text-slate-500">Active Cohorts</div>
               <div className="text-2xl font-extrabold text-slate-900 mt-1">{activeCount}</div>
               <div className="text-[11px] text-emerald-600 font-bold mt-0.5">
-                Across {MOCK_BRANCHES.length} Campuses
+                Across {branches.length} Campuses
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -264,8 +268,8 @@ export default function BatchSchedulerPage() {
               onChange={(e) => setBranchFilter(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
             >
-              <option value="ALL">All Campuses ({MOCK_BRANCHES.length})</option>
-              {MOCK_BRANCHES.map((b) => (
+              <option value="ALL">All Campuses ({branches.length})</option>
+              {branches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name} ({b.city})
                 </option>
@@ -278,8 +282,8 @@ export default function BatchSchedulerPage() {
               onChange={(e) => setCourseFilter(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
             >
-              <option value="ALL">All Courses ({MOCK_COURSES.length})</option>
-              {MOCK_COURSES.map((c) => (
+              <option value="ALL">All Courses ({courses.length})</option>
+              {courses.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}
                 </option>
@@ -332,8 +336,8 @@ export default function BatchSchedulerPage() {
                   </tr>
                 ) : (
                   filteredBatches.map((batch) => {
-                    const course = MOCK_COURSES.find((c) => c.id === batch.courseId);
-                    const branch = MOCK_BRANCHES.find((b) => b.id === batch.branchId);
+                    const course = courses.find((c) => c.id === batch.courseId);
+                    const branch = branches.find((b) => b.id === batch.branchId);
 
                     return (
                       <tr key={batch.id} className="hover:bg-slate-50/80 transition-colors">
@@ -448,7 +452,7 @@ export default function BatchSchedulerPage() {
                   onChange={(e) => setForm({ ...form, courseId: e.target.value })}
                   className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                 >
-                  {MOCK_COURSES.map((c) => (
+                  {courses.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.title}
                     </option>
@@ -463,7 +467,7 @@ export default function BatchSchedulerPage() {
                   onChange={(e) => setForm({ ...form, branchId: e.target.value })}
                   className="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 bg-white"
                 >
-                  {MOCK_BRANCHES.map((b) => (
+                  {branches.map((b) => (
                     <option key={b.id} value={b.id}>
                       {b.name} ({b.city})
                     </option>

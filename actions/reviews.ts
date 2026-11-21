@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getSession, hasSecureAdminConfiguration } from "@/lib/auth";
 import { db } from "@/lib/db";
 import {
   publicReviewSchema,
@@ -15,7 +16,7 @@ export async function getApprovedReviews(
   courseId?: string,
   branchId?: string
 ): Promise<ReviewData[]> {
-  return await db.getApprovedReviews(courseId, branchId);
+  return (await db.getApprovedReviews(courseId, branchId)).map(review => ({...review, studentEmail: "", adminNote: undefined}));
 }
 
 export async function getAllReviews(params?: {
@@ -32,6 +33,7 @@ export async function getAllReviews(params?: {
   page: number;
   totalPages: number;
 }> {
+  if (!hasSecureAdminConfiguration || !(await getSession())) throw new Error("Staff sign-in required.");
   return await db.getReviews(params);
 }
 
@@ -87,6 +89,8 @@ export async function moderateReview(
   formData: ReviewModerationInput
 ): Promise<ActionResult<ReviewData>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const validated = reviewModerationSchema.safeParse(formData);
 
     if (!validated.success) {
@@ -129,6 +133,8 @@ export async function moderateReview(
 
 export async function deleteReview(id: string): Promise<ActionResult<boolean>> {
   try {
+    const session = await getSession();
+    if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
     const deleted = await db.deleteReview(id);
     if (!deleted) {
       return {

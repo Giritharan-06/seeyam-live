@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { mockDb } from "./mock-db";
+import { catalogStore } from "./catalog-store";
+import { crmStore } from "./crm-store";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
@@ -24,6 +25,5 @@ if (process.env.NODE_ENV !== "production" && hasValidDatabaseUrl) {
   globalForPrisma.prisma = prisma;
 }
 
-// Export a unified db object that uses mockDb by default or prisma if active
-export const db = mockDb;
+export const db = { ...catalogStore(prisma), ...crmStore(prisma) };
 export { hasValidDatabaseUrl };
