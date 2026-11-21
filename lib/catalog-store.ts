@@ -103,11 +103,40 @@ function branchFields(d: Partial<BranchData>) {
 const filter = (value?: string) => (value === "ALL" ? undefined : value);
 
 export function catalogStore(p: PrismaClient) {
-  async function remove(kind: "course" | "branch", id: string) {
+  async function remove(
+    kind: "course" | "branch",
+    id: string,
+    replacement?: string,
+  ) {
+    if (!id || id === replacement) throw new Error("Invalid branch selection.");
     return p.$transaction(
       async (tx) => {
         const courseId = id,
           branchId = id;
+        if (kind === "branch" && replacement) {
+          await tx.branch.findUniqueOrThrow({ where: { id } });
+          await tx.branch.findUniqueOrThrow({ where: { id: replacement } });
+          await tx.batch.updateMany({
+            where: { branchId: id },
+            data: { branchId: replacement },
+          });
+          await tx.lead.updateMany({
+            where: { branchId: id },
+            data: { branchId: replacement },
+          });
+          await tx.user.updateMany({
+            where: { branchId: id },
+            data: { branchId: replacement },
+          });
+          await tx.review.updateMany({
+            where: { branchId: id },
+            data: { branchId: replacement },
+          });
+          await tx.placementStory.updateMany({
+            where: { branchId: id },
+            data: { branchId: replacement },
+          });
+        }
         const dependencies =
           kind === "course"
             ? [
@@ -126,15 +155,33 @@ export function catalogStore(p: PrismaClient) {
                 tx.review.count({ where: { branchId } }),
                 tx.placementStory.count({ where: { branchId } }),
               ];
-        if ((await Promise.all(dependencies)).some((count) => count > 0))
-          throw new Error("LINKED_RECORD");
+        const counts = await Promise.all(dependencies);
+        if (kind === "branch" && counts.some((count) => count > 0)) {
+          const labels = [
+            "Batches",
+            "Enquiries",
+            "Staff accounts",
+            "Reviews",
+            "Placement stories",
+          ];
+          throw new Error(
+            "LINKED_BRANCH:" +
+              counts
+                .map((count, index) =>
+                  count ? labels[index] + ": " + count : "",
+                )
+                .filter(Boolean)
+                .join(", "),
+          );
+        }
+        if (counts.some((count) => count > 0)) throw new Error("LINKED_RECORD");
         const result =
           kind === "course"
             ? await tx.course.deleteMany({ where: { id } })
             : await tx.branch.deleteMany({ where: { id } });
         return result.count === 1;
       },
-      { isolationLevel: "Serializable" },
+      { isolationLevel: "Serializable", timeout: 15000 },
     );
   }
   return {
@@ -197,7 +244,8 @@ export function catalogStore(p: PrismaClient) {
       ),
     updateBranch: async (id: string, d: Partial<BranchData>) =>
       branch(await p.branch.update({ where: { id }, data: branchFields(d) })),
-    deleteBranch: async (id: string) => remove("branch", id),
+    deleteBranch: async (id: string, replacement?: string) =>
+      remove("branch", id, replacement),
     getBatches: async (branchId?: string, courseId?: string) =>
       (
         await p.batch.findMany({

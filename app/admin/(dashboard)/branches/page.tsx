@@ -19,6 +19,7 @@ import {
   Sparkles,
   Navigation,
 } from "lucide-react";
+import DeleteRecordDialog from "@/components/admin/DeleteRecordDialog";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getAllBranches, createBranch, updateBranch, deleteBranch } from "@/actions/branches";
 import { BranchData } from "@/lib/mock-data";
@@ -35,7 +36,6 @@ export default function CampusBranchesPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState<BranchData | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [listError, setListError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Form state
@@ -151,23 +151,18 @@ export default function CampusBranchesPage() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to remove this campus branch?")) {
-      startTransition(async () => {
-        const result = await deleteBranch(id);
-        if (!result.success) { setListError(result.message); return; }
-        setListError(null);
-        loadBranches();
-      });
-    }
-  };
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const target = branches.find(row => row.id === deleteId);
+
 
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AdminHeader />
+      {target && <DeleteRecordDialog key={target.id} kind="branch" name={target.name} close={() => setDeleteId(null)}
+        options={branches.filter(row => row.id !== target.id).map(row => ({id:row.id,label:row.name}))} remove={replacement => deleteBranch(target.id,replacement)}
+        refresh={() => { void loadBranches(); }} />}
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-        {listError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-red-700">{listError}</p>}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -353,7 +348,7 @@ export default function CampusBranchesPage() {
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(branch.id)}
+                      onClick={() => setDeleteId(branch.id)}
                       className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                       title="Delete branch"
                     >

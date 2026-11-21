@@ -96,11 +96,11 @@ export async function updateBranch(
   }
 }
 
-export async function deleteBranch(id: string): Promise<ActionResult<boolean>> {
+export async function deleteBranch(id: string, replacement?: string): Promise<ActionResult<boolean> & {linked?:boolean}> {
   try {
     const session = await getSession();
     if (!hasSecureAdminConfiguration || session?.role !== "ADMIN") return { success: false, message: "Please sign in with an authorized staff account." };
-    const deleted = await db.deleteBranch(id);
+    const deleted = await db.deleteBranch(id, replacement);
     if (!deleted) {
       return {
         success: false,
@@ -118,10 +118,12 @@ export async function deleteBranch(id: string): Promise<ActionResult<boolean>> {
       data: true,
     };
   } catch (error) {
+    const linked = error instanceof Error && (error.message.startsWith("LINKED_BRANCH:") || ("code" in error && error.code === "P2003"));
     console.error("deleteBranch error:", error);
     return {
       success: false,
-      message: error instanceof Error && (error.message === "LINKED_RECORD" || ("code" in error && error.code === "P2003")) ? "Other records reference this branch. Reassign those records before deleting this branch." : "Failed to delete branch.",
+      linked,
+      message: linked ? (error instanceof Error && error.message.startsWith("LINKED_BRANCH:") ? "Linked to this branch: " + error.message.slice("LINKED_BRANCH:".length) : "Other records reference this branch.") : "Failed to delete branch.",
     };
   }
 }
