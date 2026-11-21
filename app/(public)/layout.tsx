@@ -1,4 +1,4 @@
-import { getPublishedPlatform } from "@/lib/published-platform";
+import { getCatalog } from "@/lib/public-catalog";
 import PublicShell from "@/components/PublicShell";
 import DynamicThemeProvider from "@/components/DynamicThemeProvider";
 import { LeadModalProvider } from "@/components/LeadModalContext";
@@ -10,7 +10,7 @@ export default async function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <PlatformDataProvider initial={await getPublishedPlatform()}>
+    <PlatformDataProvider initial={await getCatalog()}>
       <DynamicThemeProvider>
         <LeadModalProvider>
           <PublicShell>{children}</PublicShell>

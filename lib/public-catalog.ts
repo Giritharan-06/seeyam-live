@@ -1,7 +1,7 @@
 import { getPublishedPlatform } from "./published-platform";
 import { cache } from "react";
 
-const getCatalog = cache(getPublishedPlatform);
+export const getCatalog = cache(getPublishedPlatform);
 
 // Public detail pages use the same published catalog as the listings.
 export const publicCatalog = {
