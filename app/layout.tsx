@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import "@/components/card-art.css";
 import { GlobalStructuredData } from "@/components/StructuredData";
-import CardArtEnhancer from "@/components/CardArtEnhancer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,9 +47,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: "Seeyam Technologies | Premier Data Analytics & Digital Marketing Institute",
     description:
@@ -91,7 +86,6 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased font-sans">
         <GlobalStructuredData />
         {children}
-        <CardArtEnhancer />
       </body>
     </html>
   );

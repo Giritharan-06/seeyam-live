@@ -14,7 +14,7 @@ if (!class_exists('Seeyam_Headless_CMS')) {
 
 class Seeyam_Headless_CMS {
 
-    const CACHE_KEY  = 'seeyam_platform_data_v2';
+    const CACHE_KEY  = 'seeyam_platform_data_v3';
     const CACHE_TTL  = 30; // seconds — matches Next.js ISR revalidation window
     const LEAD_STATUSES = ['NEW', 'CONTACTED', 'COUNSELING', 'ENROLLED', 'DROPPED'];
 
@@ -1811,6 +1811,19 @@ REVALIDATE_SECRET=<?php echo esc_html($options['webhook_secret'] ?? ''); ?></pre
             'permission_callback' => '__return_true',
         ]);
 
+        register_rest_route($ns, '/seo', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_public_seo'],
+                'permission_callback' => '__return_true',
+            ],
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'save_public_seo'],
+                'permission_callback' => function () { return current_user_can('manage_options'); },
+            ],
+        ]);
+
         // Lead: create (public — honeypot protected) & list (auth)
         register_rest_route($ns, '/leads', [
             [
@@ -1848,15 +1861,101 @@ REVALIDATE_SECRET=<?php echo esc_html($options['webhook_secret'] ?? ''); ?></pre
 
         // Seed data (dev utility)
         register_rest_route($ns, '/seed', [
-            'methods'             => ['GET', 'POST'],
+            'methods'             => 'POST',
             'callback'            => [$this, 'seed_data_endpoint'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => function () { return current_user_can('manage_options'); },
         ]);
+    }
+
+    public function get_public_seo() {
+        global $wpdb;
+        $prefix = $wpdb->esc_like('seeyam_seo_page_') . '%';
+        $values = $wpdb->get_col($wpdb->prepare(
+            "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
+            $prefix
+        ));
+        if ($wpdb->last_error) {
+            return new WP_Error('seo_read_failed', 'Could not read SEO settings.', ['status' => 500]);
+        }
+        return rest_ensure_response([
+            'pages' => array_map('maybe_unserialize', $values),
+            'robots' => get_option('seeyam_seo_robots', null),
+        ]);
+    }
+
+    public function save_public_seo($request) {
+        $data = $request->get_json_params();
+        $invalid = new WP_Error('invalid_seo', 'Invalid SEO settings.', ['status' => 400]);
+        if (!is_array($data) || strlen($request->get_body()) > 90000) return $invalid;
+
+        if (array_key_exists('robots', $data)) {
+            $input = $data['robots'];
+            if (!is_array($input) || !is_bool($input['advertiseSitemap'] ?? null)) return $invalid;
+            $saved = ['advertiseSitemap' => $input['advertiseSitemap']];
+            foreach (['allow', 'disallow'] as $field) {
+                $paths = $input[$field] ?? null;
+                if (!is_array($paths) || count($paths) > 50) return $invalid;
+                foreach ($paths as $path) {
+                    if (!is_string($path) || strlen($path) > 240 ||
+                        !preg_match('~^/(?!/)[A-Za-z0-9_./*%?&=$-]*$~D', $path)) return $invalid;
+                }
+                $saved[$field] = array_values($paths);
+            }
+            $option = 'seeyam_seo_robots';
+        } else {
+            $path = $data['path'] ?? null;
+            $fields = $data['fields'] ?? null;
+            if (!is_string($path) || strlen($path) > 240 || !is_array($fields) ||
+                !preg_match('~^/(?:[a-z0-9][a-z0-9_-]*(?:/[a-z0-9][a-z0-9_-]*)*)?$~iD', $path) ||
+                preg_match('~^/(admin|api)(/|$)~i', $path)) return $invalid;
+
+            $limits = [
+                'title' => 150, 'description' => 400, 'focusKeywords' => 300,
+                'canonical' => 2048, 'ogTitle' => 150, 'ogDescription' => 400,
+                'socialImage' => 2048, 'imageAlt' => 250, 'indexing' => 10, 'structuredData' => 12000,
+            ];
+            $clean = [];
+            foreach ($limits as $field => $max) {
+                $value = $fields[$field] ?? null;
+                if (!is_string($value) || strlen($value) > $max * 4) return $invalid;
+                $value = trim($value);
+                $length = function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : strlen($value);
+                if ($length > $max) return $invalid;
+                if ($field === 'canonical' || $field === 'socialImage') {
+                    if ($value !== '' && !$this->valid_seo_url($value)) return $invalid;
+                } elseif ($field === 'structuredData' && $value !== '') {
+                    $schema = json_decode($value);
+                    if (!is_object($schema) || !in_array($schema->{'@context'} ?? null, ['https://schema.org', 'https://schema.org/'], true) ||
+                        !(is_string($schema->{'@type'} ?? null) && trim($schema->{'@type'}) !== '' || is_array($schema->{'@graph'} ?? null) && count($schema->{'@graph'}))) return $invalid;
+                } else {
+                    $value = wp_strip_all_tags($value, true);
+                }
+                $clean[$field] = $value;
+            }
+            if (!in_array($clean['indexing'], ['inherit', 'index', 'noindex'], true)) return $invalid;
+            $option = 'seeyam_seo_page_' . hash('sha256', $path);
+            $saved = ['path' => $path, 'fields' => $clean, 'updatedAt' => gmdate('c')];
+        }
+
+        if (!update_option($option, $saved, false) && get_option($option) !== $saved) {
+            return new WP_Error('seo_write_failed', 'Could not save SEO settings.', ['status' => 500]);
+        }
+        return rest_ensure_response(['saved' => true]);
+    }
+
+    private function valid_seo_url($url) {
+        if (strpos($url, chr(92)) !== false || preg_match('/[\x00-\x20\x7f]/', $url)) return false;
+        if (strpos($url, '/') === 0) return strpos($url, '//') !== 0;
+        $parts = wp_parse_url($url);
+        return is_array($parts) && !empty($parts['host']) &&
+            in_array(strtolower($parts['scheme'] ?? ''), ['https', 'http'], true) &&
+            !isset($parts['user']) && !isset($parts['pass']) && !isset($parts['fragment']);
     }
 
     public function get_site_settings($request) {
         $saved  = get_option('seeyam_site_options', []);
         $merged = wp_parse_args(is_array($saved) ? $saved : [], $this->get_default_settings());
+        unset($merged['api_key'], $merged['webhook_secret']);
         return rest_ensure_response($this->remove_retired_scroll_settings($merged));
     }
 
@@ -2126,25 +2225,6 @@ REVALIDATE_SECRET=<?php echo esc_html($options['webhook_secret'] ?? ''); ?></pre
             ];
         }
 
-        // Leads (recent 50)
-        $leads = [];
-        foreach ((new WP_Query(['post_type' => 'lead', 'posts_per_page' => 50, 'post_status' => 'publish']))->posts as $post) {
-            $nr = get_post_meta($post->ID, 'notes_json', true);
-            $leads[] = [
-                'id'        => 'lead-' . $post->ID,
-                'fullName'  => get_post_meta($post->ID, 'student_name',  true) ?: $post->post_title,
-                'email'     => get_post_meta($post->ID, 'student_email', true) ?: '',
-                'phone'     => get_post_meta($post->ID, 'student_phone', true) ?: '',
-                'courseId'  => get_post_meta($post->ID, 'course_id',    true) ?: 'course-mern',
-                'branchId'  => get_post_meta($post->ID, 'branch_id',    true) ?: 'branch-omr',
-                'status'    => get_post_meta($post->ID, 'lead_status',   true) ?: 'NEW',
-                'source'    => get_post_meta($post->ID, 'source',        true) ?: 'Website',
-                'createdAt' => get_the_date('c', $post),
-                'updatedAt' => get_the_modified_date('c', $post),
-                'notes'     => is_string($nr) ? (json_decode($nr, true) ?: []) : ($nr ?: []),
-            ];
-        }
-
         // Placements
         $placements = [];
         foreach ((new WP_Query(['post_type' => 'placement', 'posts_per_page' => -1, 'post_status' => 'publish']))->posts as $post) {
@@ -2259,10 +2339,11 @@ REVALIDATE_SECRET=<?php echo esc_html($options['webhook_secret'] ?? ''); ?></pre
         $saved    = get_option('seeyam_site_options', []);
         $settings = wp_parse_args(is_array($saved) ? $saved : [], $this->get_default_settings());
         $settings = $this->remove_retired_scroll_settings($settings);
+        unset($settings['api_key'], $settings['webhook_secret']);
 
         $response = [
             'success' => true,
-            'data'    => compact('categories', 'courses', 'branches', 'leads', 'placements', 'reviews', 'batches', 'faqs', 'interviewQuestions', 'resources', 'jobPortalLinks', 'settings'),
+            'data'    => compact('categories', 'courses', 'branches', 'placements', 'reviews', 'batches', 'faqs', 'interviewQuestions', 'resources', 'jobPortalLinks', 'settings'),
         ];
 
         set_transient(self::CACHE_KEY, $response, self::CACHE_TTL);

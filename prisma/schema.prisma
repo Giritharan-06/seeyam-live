@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model SeoSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("seo_settings")
+}
+
 // ─── Enums ──────────────────────────────────────────────
 
 enum Role {
@@ -47,6 +55,7 @@ enum ResourceType {
 // ─── Models ─────────────────────────────────────────────
 
 model User {
+  active       Boolean  @default(true)
   id           String   @id @default(cuid())
   name         String
   email        String   @unique
@@ -61,6 +70,7 @@ model User {
 }
 
 model Category {
+  description String?
   id      String   @id @default(cuid())
   name    String   @unique
   slug    String   @unique
@@ -71,6 +81,11 @@ model Category {
 }
 
 model Course {
+  expectedSalary String?
+  rating Float?
+  enrolledCount Int?
+  highlights String[] @default([])
+  hiringPartners String[] @default([])
   id               String              @id @default(cuid())
   title            String
   slug             String              @unique
@@ -97,6 +112,7 @@ model Course {
 }
 
 model Batch {
+  instructorExp String?
   id             String      @id @default(cuid())
   courseId       String
   course         Course      @relation(fields: [courseId], references: [id])
@@ -114,6 +130,9 @@ model Batch {
 }
 
 model Branch {
+  email String?
+  timing String?
+  landmark String?
   id          String  @id @default(cuid())
   name        String  @unique
   slug        String  @unique
@@ -130,6 +149,9 @@ model Branch {
 }
 
 model Lead {
+  source String?
+  reason String?
+  brochureUrl String?
   id        String     @id @default(cuid())
   fullName  String
   email     String
@@ -147,6 +169,10 @@ model Lead {
 }
 
 model PlacementStory {
+  branchId String?
+  quote String?
+  previousRole String?
+  linkedinUrl String?
   id               String  @id @default(cuid())
   studentName      String
   companyName      String
@@ -160,6 +186,8 @@ model PlacementStory {
 }
 
 model FAQ {
+  legacyCourseId String?
+  category String?
   id        String   @id @default(cuid())
   question  String   @db.Text
   answer    String   @db.Text
@@ -172,9 +200,10 @@ model FAQ {
 }
 
 model InterviewQuestion {
+  legacyCourseId String?
   id        String   @id @default(cuid())
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id])
   question  String   @db.Text
   answer    String?  @db.Text
   category  String   // e.g. "Power BI", "SQL", "Tableau", "Python"
@@ -185,6 +214,10 @@ model InterviewQuestion {
 }
 
 model Resource {
+  legacyCourseId String?
+  fileSize String?
+  category String?
+  description String?
   id        String       @id @default(cuid())
   title     String
   type      ResourceType
@@ -197,6 +230,8 @@ model Resource {
 }
 
 model JobPortalLink {
+  icon String?
+  badge String?
   id         String   @id @default(cuid())
   siteName   String
   url        String   @db.Text
@@ -205,4 +240,41 @@ model JobPortalLink {
   createdAt  DateTime @default(now())
 
   @@map("job_portal_links")
+}
+
+model BlogPost {
+  slug String @id
+  title String
+  content Json
+  @@map("blog_posts")
+}
+
+model HiringPartner {
+  name String @id
+  logoText String
+  badge String
+  @@map("hiring_partners")
+}
+
+model SiteSetting {
+  key String @id
+  value Json
+  @@map("site_settings")
+}
+
+model Review {
+  id String @id @default(cuid())
+  studentName String
+  studentEmail String
+  courseId String
+  branchId String
+  rating Int
+  title String
+  body String
+  completionYear String
+  status String
+  adminNote String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("reviews")
 }

@@ -65,10 +65,9 @@ const NAV_GROUPS = [
     label: "Growth & Visibility",
     items: [
       {
-        name: "SEO / AEO / GEO Engine",
+        name: "SEO Management",
         href: "/admin/seo",
         icon: Globe2,
-        badge: "New",
       },
       {
         name: "Student Reviews",
@@ -81,6 +80,7 @@ const NAV_GROUPS = [
   {
     label: "System",
     items: [
+      { name: "Counselors", href: "/admin/counselors", icon: ShieldCheck },
       {
         name: "Platform Settings",
         href: "/admin/settings",
@@ -109,14 +109,14 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <aside
       className={`bg-[#071938] text-slate-300 border-r border-[#0f2956] flex flex-col justify-between transition-all duration-300 z-30 shrink-0 ${
-        collapsed ? "w-20" : "w-64"
+        collapsed ? "w-14 md:w-20" : "w-14 md:w-64"
       }`}
     >
       {/* Top Brand Logo */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
-        <div className="p-4 border-b border-[#0f2956] flex items-center justify-between">
+        <div className="p-2 md:p-4 border-b border-[#0f2956] flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-3 overflow-hidden group">
-            <div className="h-10 w-14 rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-[#1d4282] overflow-hidden group-hover:scale-105 transition-transform">
+            <div className="h-8 w-9 md:h-10 md:w-14 rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-[#1d4282] overflow-hidden group-hover:scale-105 transition-transform">
               <img
                 src="/logo.png"
                 alt="Seeyam Logo"
@@ -124,7 +124,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
               />
             </div>
             {!collapsed && (
-              <div className="truncate">
+              <div className="hidden truncate md:block">
                 <div className="font-extrabold text-sm text-white tracking-tight leading-none">
                   SEEYAM CRM
                 </div>
@@ -146,15 +146,15 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         </div>
 
         {/* Grouped Navigation Links */}
-        <div className="p-3 space-y-6">
+        <div className="p-1.5 space-y-5 md:p-3 md:space-y-6">
           {NAV_GROUPS.map((group) => (
             <div key={group.label} className="space-y-1.5">
               {!collapsed && (
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 pb-1">
+                <div className="hidden px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 md:block">
                   {group.label}
                 </div>
               )}
-              {group.items.map((item) => {
+              {group.items.filter(item => !["/admin/seo", "/admin/counselors"].includes(item.href) || user?.role === "ADMIN").map((item) => {
                 const Icon = item.icon;
                 const isActive = item.exact
                   ? pathname === item.href
@@ -169,7 +169,8 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                         ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
                         : "text-slate-400 hover:text-white hover:bg-[#0e2a5c]"
                     }`}
-                    title={collapsed ? item.name : undefined}
+                    aria-label={item.name}
+                    title={item.name}
                   >
                     <Icon
                       className={`w-4 h-4 shrink-0 ${
@@ -177,7 +178,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                       }`}
                     />
                     {!collapsed && (
-                      <div className="flex-1 flex items-center justify-between truncate">
+                      <div className="hidden flex-1 items-center justify-between truncate md:flex">
                         <span>{item.name}</span>
                         {item.badge && (
                           <span
@@ -201,7 +202,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       </div>
 
       {/* Bottom User Profile Card & Quick Public Link */}
-      <div className="p-3 border-t border-[#0f2956] space-y-2 bg-[#051329]">
+      <div className="p-1.5 md:p-3 border-t border-[#0f2956] space-y-2 bg-[#051329]">
         {/* Quick View Public Site */}
         <Link
           href="/"
@@ -210,12 +211,12 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           title="Open Public Website"
         >
           <ExternalLink className="w-3.5 h-3.5" />
-          {!collapsed && <span>View Public Website</span>}
+          {!collapsed && <span className="hidden md:inline">View Public Website</span>}
         </Link>
 
         {/* User Card */}
         <div className="flex items-center justify-between p-2 rounded-xl bg-[#071938] border border-[#0f2956]">
-          <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="hidden items-center gap-2.5 overflow-hidden md:flex">
             <div className="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
               {initial}
             </div>

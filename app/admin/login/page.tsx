@@ -3,17 +3,13 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  GraduationCap,
   Lock,
   Mail,
   Eye,
   EyeOff,
   ArrowRight,
-  ShieldCheck,
-  Sparkles,
   AlertCircle,
   CheckCircle2,
-  KeyRound,
   ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
@@ -58,11 +54,6 @@ export default function AdminLoginPage() {
     }
   };
 
-  const handleQuickFill = (fillEmail: string, fillPass: string) => {
-    setEmail(fillEmail);
-    setPassword(fillPass);
-    setError(null);
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-4 relative overflow-hidden font-sans">
@@ -90,9 +81,6 @@ export default function AdminLoginPage() {
             <div className="text-left">
               <div className="text-xs font-black tracking-tight text-white flex items-center gap-1.5">
                 SEEYAM TECHNOLOGIES
-                <span className="text-[9px] bg-blue-500/20 text-blue-300 font-semibold px-1.5 py-0.2 rounded uppercase">
-                  CRM
-                </span>
               </div>
             </div>
           </Link>
@@ -201,42 +189,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials Assistant */}
-          <div className="pt-4 border-t border-slate-800/80 space-y-3">
-            <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold">
-              <span className="flex items-center gap-1">
-                <KeyRound className="w-3 h-3 text-emerald-400" />
-                <span>Quick Test Accounts:</span>
-              </span>
-              <span className="text-[10px] text-slate-500">Click to autofill</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickFill("admin@seeyam.com", "admin123")}
-                className="p-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-left transition-all group"
-              >
-                <div className="text-[11px] font-bold text-white group-hover:text-emerald-400 flex items-center justify-between">
-                  <span>Admin</span>
-                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                </div>
-                <div className="text-[10px] text-slate-400 truncate">admin@seeyam.com</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickFill("counselor@seeyam.com", "counselor123")}
-                className="p-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-teal-500/50 text-left transition-all group"
-              >
-                <div className="text-[11px] font-bold text-white group-hover:text-teal-400 flex items-center justify-between">
-                  <span>Counselor</span>
-                  <Sparkles className="w-3 h-3 text-teal-400" />
-                </div>
-                <div className="text-[10px] text-slate-400 truncate">counselor@seeyam.com</div>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer info */}

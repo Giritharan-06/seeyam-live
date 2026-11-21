@@ -21,7 +21,7 @@ export async function loginAction(input: LoginInput): Promise<AuthResponse> {
     }
 
     const { email, password, rememberMe } = validated.data;
-    const user = authenticateUser(email, password);
+    const user = await authenticateUser(email, password);
 
     if (!user) {
       return {

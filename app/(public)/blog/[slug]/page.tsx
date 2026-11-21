@@ -1,3 +1,5 @@
+import PageStructuredData from "@/components/PageStructuredData";
+import { withPageSeo } from "@/lib/seo";
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -44,7 +46,7 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return withPageSeo(`/blog/${post.slug}`, { title: post.title, description: post.summary }, {
     title: post.title,
     description: post.summary,
     keywords: [
@@ -61,7 +63,7 @@ export async function generateMetadata({
       publishedTime: post.publishedDate,
       authors: [post.author],
     },
-  };
+  });
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -100,6 +102,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-24">
+      <PageStructuredData path={`/blog/${post.slug}`} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}

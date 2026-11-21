@@ -1,3 +1,5 @@
+import PageStructuredData from "@/components/PageStructuredData";
+import { withPageSeo } from "@/lib/seo";
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -53,7 +55,7 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return withPageSeo(`/branches/${branch.slug}`, { title: `${branch.name} Campus (${branch.city})`, description: branch.address }, {
     title: `${branch.name} Campus (${branch.city}) | IT Training & Placement Institute`,
     description: `Visit Seeyam Technologies ${branch.name} campus in ${branch.city}. Address: ${branch.address}. 100% placement-oriented Full Stack, Cloud DevOps, AI & Testing programs.`,
     keywords: [
@@ -62,7 +64,7 @@ export async function generateMetadata({
       `Seeyam Technologies ${branch.name}`,
       `Full Stack training ${branch.city}`,
     ],
-  };
+  });
 }
 
 export default async function BranchDetailPage({
@@ -82,6 +84,7 @@ export default async function BranchDetailPage({
 
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
+      <PageStructuredData path={`/branches/${branch.slug}`} />
       {/* Breadcrumb Header */}
       <div className="bg-[#071938] border-b border-[#0f2956] py-3 text-xs text-slate-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2">

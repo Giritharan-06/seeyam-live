@@ -1,3 +1,5 @@
+import PageStructuredData from "@/components/PageStructuredData";
+import { withPageSeo } from "@/lib/seo";
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -68,7 +70,7 @@ export async function generateMetadata({
   const categories = await db.getCategories();
   const category = categories.find((c) => c.id === course.categoryId);
 
-  return {
+  return withPageSeo(`/courses/${course.slug}`, { title: `${course.title} Training & Certification Course`, description: course.summary }, {
     title: `${course.title} Training & Certification Course`,
     description: `${course.summary} Join Seeyam Technologies for hands-on live projects, 100% placement assurance, and industry mentorship.`,
     keywords: [
@@ -79,7 +81,7 @@ export async function generateMetadata({
       `${category?.name || "IT"} certification`,
       "100% placement guarantee",
     ],
-  };
+  });
 }
 
 export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
@@ -139,6 +141,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
+      <PageStructuredData path={`/courses/${course.slug}`} />
       <CourseDetailSchema course={course} reviews={reviews} />
       {/* Breadcrumb Header */}
       <div className="bg-[#071938] border-b border-[#0f2956] py-3 text-xs text-slate-300">

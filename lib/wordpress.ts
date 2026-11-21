@@ -216,7 +216,6 @@ export async function getAllPlatformData(): Promise<AllPlatformDataResponse> {
           name: decodeHtml(branch.name),
           address: decodeHtml(branch.address),
         })),
-        leads: json.data.leads || [],
         placements: json.data.placements?.length ? json.data.placements : MOCK_PLACEMENTS,
         reviews: json.data.reviews?.length ? json.data.reviews : MOCK_REVIEWS,
         batches: json.data.batches?.length ? json.data.batches : MOCK_BATCHES,
@@ -224,7 +223,7 @@ export async function getAllPlatformData(): Promise<AllPlatformDataResponse> {
         interviewQuestions: json.data.interviewQuestions?.length ? json.data.interviewQuestions : MOCK_INTERVIEW_QUESTIONS,
         resources: json.data.resources?.length ? json.data.resources : MOCK_RESOURCES,
         jobPortalLinks: json.data.jobPortalLinks?.length ? json.data.jobPortalLinks : MOCK_JOB_PORTAL_LINKS,
-        settings: json.data.settings || getDefaultSettings(),
+        settings: publicSettings(json.data.settings),
       };
     }
   } catch (error) {
@@ -477,6 +476,14 @@ export async function getPlatformJobPortalLinks(
   return list;
 }
 
+function publicSettings(value: unknown): PlatformSettings {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return getDefaultSettings();
+  const settings = { ...value } as PlatformSettings & { api_key?: string; webhook_secret?: string };
+  delete settings.api_key;
+  delete settings.webhook_secret;
+  return settings;
+}
+
 export async function getSiteSettings(): Promise<PlatformSettings> {
   const url = `${WP_HOST}/seeyam/v1/site-settings`;
   try {
@@ -485,7 +492,7 @@ export async function getSiteSettings(): Promise<PlatformSettings> {
       headers: { Accept: "application/json" },
     });
     if (res.ok) {
-      return await res.json();
+      return publicSettings(await res.json());
     }
   } catch (error) {
     console.warn(`[WP API] Error fetching site settings from ${url}:`, error);
@@ -605,21 +612,28 @@ export async function getPageBySlug(slug: string): Promise<WordPressPage | null>
 }
 
 export async function getAllPages(): Promise<WordPressPage[]> {
-  const url = `${WP_API_ROOT}/pages?per_page=100&_embed=true`;
-
+  const pages: WordPressPage[] = [];
   try {
-    const res = await fetch(url, {
-      next: { revalidate: 30 },
-      headers: { Accept: "application/json" },
-    });
-
-    if (!res.ok) return [];
-    const pages: WordPressPage[] = await res.json();
-    return Array.isArray(pages) ? pages : [];
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const url = `${WP_API_ROOT}/pages?per_page=100&_embed=true&page=${page}`;
+      const res = await fetch(url, {
+        next: { revalidate: 30 },
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(4000),
+      });
+      if (!res.ok) break;
+      const results: WordPressPage[] = await res.json();
+      if (!Array.isArray(results)) break;
+      pages.push(...results);
+      totalPages = Number(res.headers.get("X-WP-TotalPages")) || 1;
+      page += 1;
+    } while (page <= totalPages);
   } catch (error) {
-    console.error(`[WordPress API] Error fetching all pages:`, error);
-    return [];
+    console.error("[WordPress API] Error fetching pages:", error);
   }
+  return pages;
 }
 
 export async function getPostBySlug(slug: string): Promise<WordPressPost | null> {

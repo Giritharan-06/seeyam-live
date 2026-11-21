@@ -1,14 +1,27 @@
 import { cookies } from "next/headers";
 import crypto from "crypto";
+import { promisify } from "node:util";
+import { prisma } from "./db";
+
+const deriveKey = promisify(crypto.scrypt);
+export async function counselorPasswordHash(password: string, salt = crypto.randomBytes(16).toString("hex")) {
+  const key = await deriveKey(password, salt, 64) as Buffer;
+  return salt + ":" + key.toString("hex");
+}
 
 export interface SessionUser {
   id: string;
   email: string;
   name: string;
   role: "ADMIN" | "COUNSELOR";
+  version?: string;
 }
 
 const SESSION_COOKIE_NAME = "seeyam_admin_session";
+export const hasSecureAdminConfiguration = Boolean(
+  process.env.SESSION_SECRET && process.env.SESSION_SECRET.length >= 32 &&
+  process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD.length >= 12
+);
 const SESSION_SECRET = process.env.SESSION_SECRET || "seeyam-technologies-crm-secure-session-key-2025";
 
 // Static credentials for quick development / fallback
@@ -27,7 +40,7 @@ const DEFAULT_USERS: Array<SessionUser & { passwordHash: string }> = [
     name: "Priya Sharma (Senior Counselor)",
     role: "COUNSELOR",
     // SHA256 of "counselor123"
-    passwordHash: hashPassword("counselor123"),
+    passwordHash: hashPassword(process.env.COUNSELOR_PASSWORD || "counselor123"),
   },
 ];
 
@@ -48,6 +61,7 @@ export function signToken(payload: SessionUser, maxAgeSeconds: number = 86400 * 
 
 export function verifyToken(token: string): SessionUser | null {
   try {
+    if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) return null;
     const [base64Data, signature] = token.split(".");
     if (!base64Data || !signature) return null;
 
@@ -56,12 +70,15 @@ export function verifyToken(token: string): SessionUser | null {
       .update(base64Data)
       .digest("base64url");
 
-    if (signature !== expectedSignature) return null;
+    const received = Buffer.from(signature);
+    const expected = Buffer.from(expectedSignature);
+    if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) return null;
 
     const jsonString = Buffer.from(base64Data, "base64url").toString("utf-8");
     const payload = JSON.parse(jsonString);
 
-    if (payload.exp && Date.now() > payload.exp) {
+    if (!Number.isFinite(payload.exp) || Date.now() >= payload.exp ||
+      !["ADMIN", "COUNSELOR"].includes(payload.role)) {
       return null; // Expired
     }
 
@@ -70,6 +87,7 @@ export function verifyToken(token: string): SessionUser | null {
       email: payload.email,
       name: payload.name,
       role: payload.role,
+      version: payload.version,
     };
   } catch {
     return null;
@@ -95,7 +113,12 @@ export async function getSession(): Promise<SessionUser | null> {
     const cookieStore = await cookies();
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     if (!token) return null;
-    return verifyToken(token);
+    const user = verifyToken(token);
+    if (user?.role === "COUNSELOR" && user.id !== "usr-counselor-1") {
+      const current = await prisma.user.findUnique({ where: { id: user.id } });
+      if (!current?.active || current.role !== "COUNSELOR" || current.updatedAt.toISOString() !== user.version) return null;
+    }
+    return user;
   } catch {
     return null;
   }
@@ -106,15 +129,24 @@ export async function destroySession() {
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
-export function authenticateUser(email: string, password: string): SessionUser | null {
+export async function authenticateUser(email: string, password: string): Promise<SessionUser | null> {
+  if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) return null;
   const normalizedEmail = email.trim().toLowerCase();
   const passwordHash = hashPassword(password);
 
   const found = DEFAULT_USERS.find(
-    (u) => u.email.toLowerCase() === normalizedEmail && u.passwordHash === passwordHash
+    (u) => (process.env.NODE_ENV !== "production" || u.role === "ADMIN" || Boolean(process.env.COUNSELOR_PASSWORD)) &&
+      u.email.toLowerCase() === normalizedEmail && u.passwordHash === passwordHash
   );
 
-  if (!found) return null;
+  if (!found) {
+    if (!prisma || password.length > 256) return null;
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    if (!user?.active || user.role !== "COUNSELOR" || !/^[0-9a-f]{32}:[0-9a-f]{128}$/.test(user.passwordHash)) return null;
+    const computed = await counselorPasswordHash(password, user.passwordHash.split(":")[0]);
+    if (!crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(user.passwordHash))) return null;
+    return { id: user.id, email: user.email, name: user.name, role: user.role, version: user.updatedAt.toISOString() };
+  }
 
   return {
     id: found.id,

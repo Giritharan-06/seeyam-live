@@ -1,3 +1,5 @@
+import PageStructuredData from "@/components/PageStructuredData";
+import { withPageSeo, getPageSeo, plainText } from "@/lib/seo";
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -32,12 +34,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   // Strip HTML tags for clean description
   const cleanExcerpt = page.excerpt?.rendered
-    ? page.excerpt.rendered.replace(/<[^>]*>?/gm, "").trim().slice(0, 160)
+    ? plainText(page.excerpt.rendered).slice(0, 160)
     : `Read ${page.title.rendered} at Seeyam Technologies`;
 
   const featuredImg = getFeaturedImageUrl(page);
 
-  return {
+  return withPageSeo(`/${slug}`, { title: plainText(page.title.rendered), description: cleanExcerpt }, {
     title: page.title.rendered,
     description: cleanExcerpt,
     openGraph: {
@@ -45,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: cleanExcerpt,
       images: featuredImg ? [{ url: featuredImg }] : [],
     },
-  };
+  });
 }
 
 export default async function WordPressDynamicPage({ params }: PageProps) {
@@ -57,6 +59,7 @@ export default async function WordPressDynamicPage({ params }: PageProps) {
   }
 
   const featuredImg = getFeaturedImageUrl(page);
+  const seo = await getPageSeo(`/${slug}`);
   const formattedDate = page.date
     ? new Date(page.date).toLocaleDateString("en-US", {
         year: "numeric",
@@ -67,6 +70,7 @@ export default async function WordPressDynamicPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#F8FAFD] pb-20">
+      <PageStructuredData path={`/${slug}`} />
       {/* Top Breadcrumb & Hero Header */}
       <div className="bg-[#071938] text-white pt-10 pb-16 border-b border-[#0f2956] relative overflow-hidden">
         {/* Background decorative glow */}
@@ -127,7 +131,7 @@ export default async function WordPressDynamicPage({ params }: PageProps) {
             <div className="w-full h-64 sm:h-96 relative bg-slate-100 overflow-hidden border-b border-slate-200">
               <img
                 src={featuredImg}
-                alt={page.title.rendered}
+                alt={seo?.imageAlt || page._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || plainText(page.title.rendered)}
                 className="w-full h-full object-cover"
               />
             </div>
