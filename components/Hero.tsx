@@ -23,10 +23,18 @@ export default function Hero({ onSearchCourse, onOpenLeadModal }: HeroProps) {
       <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:px-8">
         <div className="min-w-0">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-blue-700"><Sparkles size={14} className="text-amber-500" />Practical training. Career-focused learning.</p>
-          <h1 className="text-3xl font-extrabold leading-[1.12] tracking-tight text-[#071938] sm:text-4xl lg:text-[2.7rem] xl:text-[3.2rem]">Build your career in<br /><span className="text-blue-600">Data Analytics</span><br />& Digital Marketing.</h1>
-          <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">Turn spreadsheets into insights and ideas into campaigns. Learn Power BI, SQL, Python, SEO and paid advertising through practical projects and mentor guidance.</p>
+          <h1 className="font-extrabold tracking-[-0.045em] text-[#071938]">
+            <span className="mb-2 block text-[clamp(1.25rem,2.3vw,1.875rem)] font-semibold leading-tight tracking-tight">Build your career in </span>
+            <span className="block text-[clamp(1.875rem,4.7vw,3.75rem)] leading-[1.09]">
+              <span className="block text-blue-700">Data Analytics </span>
+              <span className="block text-violet-700"><span className="text-slate-600">&amp;</span> Digital Marketing.</span>
+            </span>
+          </h1>
+          <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-slate-700">
+            Turn spreadsheets into <strong className="font-semibold text-blue-800">insights</strong> and ideas into <strong className="font-semibold text-violet-800">campaigns</strong>. Learn Power BI, SQL, Python, SEO and paid advertising through practical projects and mentor guidance.
+          </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <button onClick={() => onOpenLeadModal()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-amber-500/20 transition hover:from-amber-600 hover:to-yellow-700">Book a free demo <ArrowRight size={17} /></button>
+            <button onClick={() => onOpenLeadModal()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-400 px-4 py-3 text-sm font-extrabold text-slate-950 shadow-md shadow-amber-500/20 transition hover:bg-amber-300">Book a free demo <ArrowRight size={17} /></button>
             <Link href="/courses" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-800 transition hover:border-blue-300">Explore courses</Link>
           </div>
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-600">{["Hands-on projects", "Classroom & online", "Career guidance"].map(text => <span key={text} className="inline-flex items-center gap-1.5"><Check size={14} className="text-blue-600" />{text}</span>)}</div>
