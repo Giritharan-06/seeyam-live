@@ -28,7 +28,7 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "seeyam-technologies-crm-se
 const DEFAULT_USERS: Array<SessionUser & { passwordHash: string }> = [
   {
     id: "usr-admin-1",
-    email: process.env.ADMIN_EMAIL || "admin@seeyam.com",
+    email: process.env.ADMIN_EMAIL?.trim() || "admin@seeyam.com",
     name: "Dr. Arvind Sundaram (Director)",
     role: "ADMIN",
     // SHA256 of "admin123"
@@ -136,8 +136,10 @@ export async function authenticateUser(email: string, password: string): Promise
 
   const found = DEFAULT_USERS.find(
     (u) => (process.env.NODE_ENV !== "production" || u.role === "ADMIN" || Boolean(process.env.COUNSELOR_PASSWORD)) &&
-      u.email.toLowerCase() === normalizedEmail && u.passwordHash === passwordHash
+      u.email.toLowerCase() === normalizedEmail
   );
+
+  if (found && !crypto.timingSafeEqual(Buffer.from(found.passwordHash), Buffer.from(passwordHash))) return null;
 
   if (!found) {
     if (!prisma || password.length > 256) return null;

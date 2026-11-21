@@ -13,7 +13,6 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
-import { loginAction } from "@/actions/auth";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,11 +31,12 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await loginAction({
-        email,
-        password,
-        rememberMe,
+      const response = await fetch("/api/admin/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, rememberMe }),
       });
+      const res = await response.json();
 
       if (res.success) {
         setSuccess(res.message || "Authentication successful. Redirecting...");

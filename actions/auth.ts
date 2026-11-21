@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { loginSchema, LoginInput } from "@/lib/validations/auth-schema";
-import { authenticateUser, createSession, destroySession, getSession, SessionUser } from "@/lib/auth";
+import { authenticateUser, createSession, destroySession, getSession, hasSecureAdminConfiguration, SessionUser } from "@/lib/auth";
 
 export interface AuthResponse {
   success: boolean;
@@ -12,6 +12,13 @@ export interface AuthResponse {
 
 export async function loginAction(input: LoginInput): Promise<AuthResponse> {
   try {
+    if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) {
+      return {
+        success: false,
+        message: "Staff sign-in is unavailable. Ask your site administrator to check the deployment's sign-in settings.",
+      };
+    }
+
     const validated = loginSchema.safeParse(input);
     if (!validated.success) {
       return {
