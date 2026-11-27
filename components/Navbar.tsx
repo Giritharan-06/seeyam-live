@@ -25,7 +25,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { contactDetails, phoneHref, whatsappHref } from "@/lib/contact";
 
 interface NavbarProps {
-  onOpenLeadModal: (courseId?: string, branchId?: string) => void;
+  onOpenLeadModal: (courseId?: string, branchId?: string, reason?: "DEMO_VIDEO") => void;
 }
 
 export default function Navbar({ onOpenLeadModal }: NavbarProps) {
@@ -285,7 +285,7 @@ export default function Navbar({ onOpenLeadModal }: NavbarProps) {
               </a>
 
             <button
-              onClick={() => onOpenLeadModal()}
+              onClick={() => onOpenLeadModal(undefined, undefined, "DEMO_VIDEO")}
               className="premiere-nav-demo inline-flex min-h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full px-2 text-[10px] font-extrabold transition-colors sm:px-4 sm:text-xs"
             >
               <Laptop className="hidden h-4 w-4 shrink-0 sm:block" />
@@ -418,7 +418,7 @@ export default function Navbar({ onOpenLeadModal }: NavbarProps) {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onOpenLeadModal();
+                  onOpenLeadModal(undefined, undefined, "DEMO_VIDEO");
                 }}
                 className="w-full py-3 premiere-nav-demo rounded-xl font-bold text-xs"
               >

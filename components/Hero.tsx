@@ -33,7 +33,7 @@ export default function Hero() {
             {home?.href ? (
               <a className="premiere-outline" href={home.href}><CalendarCheck size={17} aria-hidden="true" /> {demoLabel}</a>
             ) : (
-              <button type="button" className="premiere-outline" onClick={() => openLeadModal()}><CalendarCheck size={17} aria-hidden="true" /> {demoLabel}</button>
+              <button type="button" className="premiere-outline" onClick={() => openLeadModal(undefined, undefined, "DEMO_VIDEO")}><CalendarCheck size={17} aria-hidden="true" /> {demoLabel}</button>
             )}
           </div>
         </div>

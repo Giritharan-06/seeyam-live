@@ -55,18 +55,26 @@ const analyticsTopics = {
   ],
 };
 
-const curriculumTracks = [
+export const curriculumTracks = [
   { slug: "python-data-analytics", title: "Python for Data Analysis", match: /\bpython\b/i, topics: analyticsTopics.python },
   { slug: "sql-for-data-analytics", title: "SQL with Oracle", match: /\bsql\b/i, topics: analyticsTopics.sql },
   { slug: "tableau-visual-analytics", title: "Tableau Desktop and Server", match: /\btableau\b/i, topics: analyticsTopics.tableau },
   { slug: "power-bi-business-intelligence", title: "Power BI, Power Query and DAX", match: /power bi/i, topics: analyticsTopics.powerBi },
 ];
 
-export function publishedSyllabus(slug: string, modules: SyllabusModule[], editedLines: string[]): SyllabusModule[] {
-  const edited = editedLines.flatMap(line => {
-    const [title, duration = "", topics = ""] = line.split("|").map(part => part.trim());
-    return title ? [{ title, duration, topics: topics.split(topics.includes(";") ? ";" : ",").map(topic => topic.trim()).filter(Boolean) }] : [];
+export function parseSyllabusLines(editedLines: string[]): SyllabusModule[] {
+  return editedLines.flatMap(line => {
+    const [title, second = "", third] = line.split("|").map(part => part.trim());
+    const duration = third === undefined ? "" : second;
+    const topics = third ?? second;
+    // Legacy rows used commas. New rows use semicolons so topic names can contain commas.
+    const separator = third !== undefined && !topics.includes(";") ? "," : ";";
+    return title ? [{ title, duration, topics: topics.split(separator).map(topic => topic.trim()).filter(Boolean) }] : [];
   });
+}
+
+export function publishedSyllabus(slug: string, modules: SyllabusModule[], editedLines: string[]): SyllabusModule[] {
+  const edited = parseSyllabusLines(editedLines);
   if (edited.length) return edited;
 
   const tracks = slug === "data-analytics-master-program" ? curriculumTracks : curriculumTracks.filter(track => track.slug === slug);

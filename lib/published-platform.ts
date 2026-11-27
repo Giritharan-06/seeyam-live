@@ -88,7 +88,15 @@ export async function getBasePlatform(): Promise<AllPlatformDataResponse> {
   };
 }
 
-export async function getPublishedPlatform(): Promise<AllPlatformDataResponse> {
+export type PublicPlatformData = Omit<AllPlatformDataResponse, "courses"> & {
+  courses: Omit<AllPlatformDataResponse["courses"][number], "price">[];
+};
+
+export async function getPublishedPlatform(): Promise<PublicPlatformData> {
   const [base, items] = await Promise.all([getBasePlatform().catch(() => ({...getFallbackPlatformData(),courses:[],reviews:[],placements:[],batches:[],branches:[]})), publishedItems()]);
-  return applyContent(base,items);
+  const published = applyContent(base,items);
+  return {
+    ...published,
+    courses: published.courses.map(({ price, ...course }) => course),
+  };
 }

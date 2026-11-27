@@ -20,7 +20,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { MOCK_CATEGORIES, MOCK_COURSES, CourseData, SyllabusModule } from "@/lib/mock-data";
-import { formatCurrency, decodeHtml } from "@/lib/utils";
+import { decodeHtml } from "@/lib/utils";
 import CompanyLogo from "@/components/CompanyLogo";
 
 interface CourseGridProps {
@@ -279,14 +279,6 @@ export default function CourseGrid({
                         </div>
                       </div>
 
-                      <div className="text-right">
-                        <div className="text-[11px] text-slate-400 uppercase font-semibold">
-                          Course Fee
-                        </div>
-                        <div className="text-base font-black text-[#071938]">
-                          {formatCurrency(course.price)}
-                        </div>
-                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 mt-4">

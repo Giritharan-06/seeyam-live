@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { publicPath, seoFields } from "../seo-fields";
 import { prisma } from "../db";
 import { getSession, hasSecureAdminConfiguration } from "../auth";
+import { parseSyllabusLines } from "../course-curriculum";
 import {
   seoId,
   lines,
@@ -58,19 +59,7 @@ export async function history() {
   >`SELECT kind,id,action,version,created_at::text AS at FROM cms_history ORDER BY event_id DESC LIMIT 30`;
 }
 export function modules(value: string) {
-  return lines(value).map((row) => {
-    const [title, duration = "", topics = ""] = row
-      .split("|")
-      .map((x) => x.trim());
-    return {
-      title,
-      duration,
-      topics: topics
-        .split(",")
-        .map((x) => x.trim())
-        .filter(Boolean),
-    };
-  });
+  return parseSyllabusLines(lines(value)).map(({ title, duration, topics }) => ({ title, duration, topics }));
 }
 async function writeRecord(
   tx: Prisma.TransactionClient,

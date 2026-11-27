@@ -4,7 +4,7 @@ import type { CourseData } from "@/lib/mock-data";
 import { courseArtworkUrl } from "@/lib/redesign-art";
 import { decodeHtml } from "@/lib/utils";
 
-export default function HomeCourseCard({course}: {course:CourseData}) {
+export default function HomeCourseCard({course}: {course:Omit<CourseData, "price">}) {
   const artwork = course.image || courseArtworkUrl(course.slug);
   const href = "/courses/" + course.slug;
   return <article className="premiere-course">

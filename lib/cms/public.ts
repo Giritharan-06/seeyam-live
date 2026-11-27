@@ -2,7 +2,7 @@ import type { AllPlatformDataResponse } from "../wordpress";
 import { lines, type Item, type Values, type Kind } from "./fields";
 import { DEFAULT_TRAINERS } from "./trainers";
 import { SEEYAM_CAMPUS, contactDetails, mapLinkFromEmbed } from "../contact";
-import { publishedSyllabus } from "../course-curriculum";
+import { publicSyllabus, syllabusTopicsForDisplay } from "../syllabus-topics";
 
 export function existingTrainers(json?:string){
   if(json) try {const rows:unknown=JSON.parse(json);if(Array.isArray(rows)&&rows.every(r=>r && typeof r.name==="string" && typeof r.role==="string" && typeof r.bio==="string" && Array.isArray(r.tags)))return rows as typeof DEFAULT_TRAINERS;} catch {}
@@ -114,7 +114,9 @@ export function applyContent(
         ...course,
         image: values?.image || course.image,
         languages: lines(values?.languages),
-        syllabus: publishedSyllabus(course.slug, course.syllabus, lines(values?.syllabus)),
+        syllabus: syllabusTopicsForDisplay(publicSyllabus(course.slug, course.syllabus, lines(values?.syllabus)))
+          .map(topic => ({ ...topic, duration: "" })),
+        syllabusModules: undefined,
       };
     }),
     reviews: visible(

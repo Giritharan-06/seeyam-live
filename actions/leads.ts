@@ -53,15 +53,17 @@ export async function submitPublicLead(
     const brochureUrl = course?.brochureUrl || "/resources/brochures/seeyam-syllabus.pdf";
 
     let noteText = "Online inquiry submitted for course with branch preference.";
-    let successMessage = "Thank you! Your inquiry has been received. Our senior counselor will call you within 15 minutes.";
+    let successMessage = "Thank you! The SEEYAM team will contact you about your enquiry.";
 
     if (reason === "BROCHURE_DOWNLOAD") {
       noteText = `Lead requested syllabus & brochure download for ${course?.title || "selected course"}.`;
       successMessage = "Your brochure access is confirmed! Click below to download your complete syllabus PDF.";
     } else if (reason === "DEMO_VIDEO") {
-      noteText = `Lead requested demo class video session for ${course?.title || "selected course"}.`;
-      successMessage = "Demo session access link has been sent to your email and WhatsApp!";
+      noteText = `Lead requested a free demo for ${course?.title || "selected course"}.`;
+      successMessage = "Your demo request is received. The SEEYAM team will contact you with available sessions.";
     }
+    if (validated.data.learningFormat) noteText += ` Learning format: ${validated.data.learningFormat}.`;
+    if (validated.data.batchTiming) noteText += ` Batch timing: ${validated.data.batchTiming}.`;
 
     await db.createLead({
       fullName: validated.data.fullName,

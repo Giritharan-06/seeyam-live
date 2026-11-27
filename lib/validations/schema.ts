@@ -22,6 +22,8 @@ export const publicLeadSchema = z.object({
     .min(1, { message: "Please select your target course of interest" }),
   source: z.string().optional().default("Landing Page Form"),
   reason: z.enum(["ENQUIRY", "BROCHURE_DOWNLOAD", "DEMO_VIDEO"]).optional().default("ENQUIRY"),
+  learningFormat: z.enum(["", "Classroom", "Live online", "Either"]).optional(),
+  batchTiming: z.enum(["", "Weekdays", "Weekends", "Flexible"]).optional(),
 });
 
 export type PublicLeadInput = z.input<typeof publicLeadSchema>;

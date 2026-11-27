@@ -1,0 +1,435 @@
+.stage {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border-block-start: 1px solid #ffffff29;
+  background: #fff;
+  color: #171717;
+}
+
+.poster {
+  --poster-start: 8.55s;
+  --poster-accent: #ff9b57;
+  position: relative;
+  isolation: isolate;
+  grid-area: 1 / 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: clamp(1.15rem, 3vw, 3.25rem);
+  background: #131110;
+  color: #fff;
+}
+.marketingPoster { --poster-start: 14.55s; --poster-accent: #bea8ff; }
+.posterPhoto { position: absolute; z-index: -2; inset: 0 0 0 auto; width: 80%; height: 100%; object-fit: cover; object-position: 65% 45%; }
+.marketingPoster .posterPhoto { object-position: 66% 31%; }
+.poster::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, #131110 4%, #131110e8 26%, #13111015 74%),
+    linear-gradient(0deg, #131110 2%, #131110d9 31%, #13111018 72%, transparent);
+}
+.posterCopy { max-width: 33rem; }
+.poster h2 { color: #fff; font-size: clamp(1.95rem, 4.1vw, 3.8rem); font-weight: 850; letter-spacing: -.045em; line-height: 1.02; text-wrap: balance; }
+.poster p { margin-top: .48rem; color: #ffe4ce; font-size: clamp(.78rem, 1.4vw, 1rem); line-height: 1.5; }
+.poster ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; margin-top: 1.1rem; }
+.poster li { display: flex; min-width: 0; align-items: center; gap: .45rem; border: 1px solid #ffffff32; border-radius: .45rem; padding: .47rem .58rem; background: #15110fd9; font-size: clamp(.69rem, 1.1vw, .85rem); font-weight: 650; }
+.poster li svg { flex: none; color: var(--poster-accent); }
+.posterGraphic {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  display: grid;
+  width: clamp(2.75rem, 6vw, 5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--poster-accent), transparent 48%);
+  border-radius: .85rem;
+  background: #15110fcd;
+  color: var(--poster-accent);
+  box-shadow: 0 .5rem 1.5rem #0005;
+}
+.posterGraphic::after { position: absolute; inset: -.32rem; border: 1px solid color-mix(in srgb, var(--poster-accent), transparent 72%); border-radius: 1.05rem; content: ""; }
+.stage { min-height: 24rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage .sheet, .stage .chart, .stage .marketingDemo { display: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .poster { z-index: 5; animation: reveal-poster .45s ease var(--poster-start) both; }
+  .posterCopy { animation: poster-detail .48s ease calc(var(--poster-start) + .2s) both; }
+  .posterGraphic { animation: poster-detail .62s ease calc(var(--poster-start) + .38s) both; }
+}
+
+@keyframes reveal-poster {
+  from { opacity: 0; clip-path: inset(0 0 0 100%); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+@keyframes poster-detail {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sheet, .chart { min-width: 0; }
+.sheet { display: flex; flex-direction: column; }
+
+@media (min-width: 1024px) {
+  .stage { border-block-start: 0; border-inline-start: 1px solid #ffffff29; }
+}
+
+.toolbar {
+  display: flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  border-bottom: 1px solid #e9e6e2;
+  padding: .45rem clamp(.75rem, 2vw, 1.5rem);
+  background: #fff8f3;
+  font-size: clamp(.67rem, 2vw, .8rem);
+  font-weight: 750;
+}
+.toolbar span, .chartTitle {
+  display: flex;
+  align-items: center;
+  gap: .38rem;
+}
+
+.toolbar svg { flex-shrink: 0; color: #a63d00; }
+.insert {
+  flex-shrink: 0;
+  border: 1px solid #e9c6af;
+  border-radius: .4rem;
+  padding: .38rem .45rem;
+  white-space: nowrap;
+}
+.insert svg { width: .8rem; }
+
+.cells { width: 100%; flex: 1; table-layout: fixed; border-collapse: collapse; font-size: clamp(.67rem, 1.3vw, .85rem); }
+.cells col:nth-child(1) { width: 23%; }
+.cells col:nth-child(2) { width: 28%; }
+.cells col:nth-child(3) { width: 16%; }
+.cells col:nth-child(4) { width: 33%; }
+.cells :is(th, td) {
+  height: 2.1rem;
+  border-bottom: 1px solid #ede9e5;
+  padding: .4rem clamp(.4rem, 1.5vw, 1rem);
+  text-align: left;
+}
+.cells tr > :not(:last-child) { border-right: 1px solid #ede9e5; }
+.cells thead, .cells tfoot { background: #f6f5f4; }
+.cells tbody th { font-weight: 550; }
+.cells tr > :nth-last-child(-n + 2):not([colspan]) { text-align: right; }
+.cells td { font-variant-numeric: tabular-nums; }
+.entryCell, .cells tfoot td { font-weight: 700; }
+.typed { display: inline-block; }
+.sheetTab {
+  padding: .55rem clamp(.75rem, 2vw, 1.5rem);
+  color: #87400e;
+  background: #fff8f3;
+  font-size: .7rem;
+  font-weight: 700;
+}
+.cursor, .wipe { display: none; }
+
+.chart {
+  --plot-height: clamp(9rem, 16vw, 13rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid #eee9e5;
+  padding: clamp(.8rem, 2.5vw, 2.25rem);
+  background: #fff;
+}
+
+.chartTitle { font-size: .9rem; font-weight: 750; }
+.chartTitle svg { color: #a63d00; }
+
+.plot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .55rem;
+  align-items: start;
+  margin-top: 1.3rem;
+}
+.axis {
+  display: flex;
+  height: calc(var(--plot-height) + .65rem);
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: -.325rem;
+  color: #645c55;
+  text-align: right;
+  font-size: .65rem;
+  line-height: .65rem;
+  font-variant-numeric: tabular-nums;
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.column {
+  min-width: 0;
+  color: #47413c;
+  text-align: center;
+  font-size: clamp(.60rem, 1.15vw, .76rem);
+  font-weight: 700;
+}
+.track {
+  position: relative;
+  display: flex;
+  height: var(--plot-height);
+  align-items: end;
+  justify-content: center;
+  margin-bottom: .45rem;
+  border-bottom: 1px solid #ddd5d0;
+  background: repeating-linear-gradient(to top, transparent 0 calc(25% - 1px), #f0ebe7 calc(25% - 1px) 25%);
+}
+.bar {
+  position: relative;
+  width: 54%;
+  max-width: 4rem;
+  border-radius: .35rem .35rem 0 0;
+  background: linear-gradient(180deg, #ff913d, #e85600);
+  transform-origin: center bottom;
+}
+.amount {
+  position: absolute;
+  inset: auto 0 calc(100% + .15rem);
+  color: #7f3100;
+  font-variant-numeric: tabular-nums;
+}
+.summary {
+  display: grid;
+  grid-template-columns: .75fr .9fr 1.3fr;
+  gap: .45rem;
+  margin-top: 1rem;
+}
+.summary div {
+  display: grid;
+  gap: .2rem;
+  border: 1px solid #f2e1d5;
+  border-radius: .5rem;
+  padding: .43rem clamp(.4rem, 1vw, .75rem);
+  background: #fff8f3;
+}
+.summary span { color: #645c55; font-size: clamp(.63rem, 1.05vw, .75rem); }
+.summary strong { font-size: clamp(.8rem, 1.75vw, 1.17rem); white-space: nowrap; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet, .chart { grid-area: 1 / 1; }
+  .sheet { position: relative; animation: hide-sheet 9s step-end both; }
+  .chart { z-index: 1; border-top: 0; animation: reveal-chart 9s both; }
+  .typed { animation: type-value .36s steps(2, end) var(--entry) both; }
+  .entryCell { animation: select-cell .61s ease var(--entry); }
+  .calculated { animation: show-value .2s ease calc(var(--entry) + .34s) both; }
+  .cells tfoot { animation: show-value .25s ease 5.3s both; }
+  .insert { animation: insert-click 9s both; }
+  .bar { animation: grow-bar .78s cubic-bezier(.23, 1, .32, 1) var(--bar-delay) both; }
+  .amount { animation: show-value .25s ease calc(var(--bar-delay) + .54s) both; }
+
+  .cursor {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(1px 2px 3px #0008);
+    animation: cursor-route 9s cubic-bezier(.45, 0, .25, 1) both;
+  }
+
+  .ripple {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 2px solid #ef6508;
+    border-radius: 100%;
+    animation: click-ripple 9s ease-out both;
+  }
+
+  .wipe {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    display: block;
+    background: linear-gradient(100deg, #1b1b1b 55%, #c74a00 88%, #ff994f);
+    pointer-events: none;
+    animation: opening-wipe .78s cubic-bezier(.66, .03, .27, 1) both;
+  }
+}
+
+@keyframes opening-wipe { to { transform: translateX(102%); } }
+
+@keyframes type-value {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes select-cell {
+  0%, 80% { background: #fff0e6; box-shadow: inset 0 0 0 1px #d05400; }
+  100% { background: transparent; box-shadow: none; }
+}
+
+@keyframes insert-click {
+  0%, 64%, 71%, 100% { background: transparent; color: #171717; }
+  66%, 69% { background: #ffa26a; color: #171717; }
+}
+
+@keyframes cursor-route {
+  0%, 9% { left: 12%; top: 90%; opacity: 0; }
+  12% { left: 17%; top: 86%; opacity: 1; }
+  19%, 24% { left: 59%; top: 26%; opacity: 1; }
+  32%, 51% { left: 65%; top: 45%; opacity: 1; }
+  63%, 69% { left: calc(100% - 4.1rem); top: 1.25rem; opacity: 1; }
+  77%, 100% { left: calc(100% - 2.5rem); top: 3.2rem; opacity: 0; }
+}
+
+@keyframes click-ripple {
+  0%, 19%, 64%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  20%, 65% { opacity: .95; transform: translate(-50%, -50%) scale(.45); }
+  25%, 70% { opacity: 0; transform: translate(-50%, -50%) scale(1.25); }
+}
+
+@keyframes reveal-chart {
+  0%, 68% { clip-path: inset(0 100% 0 0); }
+  76%, 100% { clip-path: inset(0); }
+}
+
+@keyframes hide-sheet {
+  0% { opacity: 1; }
+  77%, 100% { opacity: 0; }
+}
+
+@keyframes grow-bar {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes show-value { from { opacity: 0; } to { opacity: 1; } }
+
+.marketingDemo { position: relative; display: grid; grid-area: 1 / 1; grid-template-rows: auto 1fr auto; min-width: 0; }
+.marketingScenes { position: relative; display: grid; min-width: 0; }
+.marketingScene {
+  --accent: #a63d00;
+  --tint: #fff1e7;
+  position: relative;
+  display: flex;
+  grid-area: 1 / 1;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: .64rem;
+  padding: clamp(1rem, 2.6vw, 2rem);
+  padding-bottom: 3.4rem;
+  background: linear-gradient(145deg, var(--tint), #fff 62%);
+}
+.marketingAudience { --accent: #344fb5; --tint: #edf1ff; }
+.marketingCreative { --accent: #6545a8; --tint: #f3edff; }
+.marketingReport { --accent: #14724f; --tint: #e6f7ef; }
+.marketingScene h2 { display: flex; align-items: center; gap: .5rem; font-size: clamp(1.07rem, 2vw, 1.55rem); font-weight: 850; line-height: 1.15; }
+.marketingScene h2 svg { flex: none; color: var(--accent); }
+.sceneCaption { color: #4e4a49; font-size: clamp(.75rem, 1.14vw, .88rem); line-height: 1.4; }
+.campaignFields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .44rem; }
+.campaignFields > div { display: grid; gap: .14rem; border: 1px solid color-mix(in srgb, var(--accent) 19%, #fff); border-radius: .56rem; padding: .45rem .55rem; background: #fff; }
+.campaignFields .selectedField { border-color: color-mix(in srgb, var(--accent) 66%, #fff); background: var(--tint); }
+.campaignFields small { display: flex; align-items: center; gap: .3rem; color: var(--accent); font-size: .69rem; font-weight: 700; }
+.adPreview small { font-size: .69rem; }
+.campaignFields strong { font-size: .78rem; }
+.campaignAction {
+  position: absolute;
+  right: clamp(1rem, 2.6vw, 2rem);
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  border-radius: .5rem;
+  padding: .53rem .7rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 800;
+}
+.adPreview { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); overflow: hidden; border-radius: .65rem; background: #211936; color: #fff; }
+.adPreview img { width: 100%; height: 100%; min-height: 7rem; object-fit: cover; }
+.adPreview > div { display: grid; align-content: center; gap: .25rem; padding: .55rem clamp(.5rem, 2vw, 1.05rem); }
+.adPreview small, .adPreview span { color: #e4d9ff; }
+.adPreview strong { font-size: clamp(.83rem, 1.7vw, 1.35rem); line-height: 1.1; }
+.adPreview b { display: flex; width: fit-content; align-items: center; gap: .24rem; border-bottom: 1px solid #c9b2ff; color: #e4d9ff; font-size: .71rem; }
+.adPreview span, .campaignInsight { font-size: .8rem; }
+.creativeDestination { display: flex; align-items: center; gap: .35rem; color: #503582; font-size: .74rem; }
+.creativeDestination svg { flex: none; }
+.marketingReport { padding-bottom: clamp(1rem, 2.6vw, 2rem); }
+.campaignResults { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+.campaignResults > div { display: grid; gap: .27rem; border: 1px solid #c5e3d7; border-radius: .55rem; padding: .58rem .42rem; background: #fff; }
+.campaignResults dt { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; color: var(--accent); font-size: .71rem; font-weight: 750; }
+.campaignResults dt svg { flex: none; }
+.campaignResults dd { font-size: clamp(1rem, 2.4vw, 1.65rem); font-weight: 850; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.campaignInsight { display: flex; align-items: center; gap: .4rem; color: #14543c; font-weight: 700; }
+.campaignCosts { display: flex; flex-wrap: wrap; gap: .38rem; font-size: .72rem; font-weight: 750; }
+.campaignCosts span { border-radius: .3rem; padding: .24rem .4rem; background: #dff5eb; color: #14543c; }
+.campaignProgress { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .3rem; border-top: 1px solid #e7e3e0; padding: .47rem .7rem; background: #fff; }
+.campaignProgress li { min-width: 0; border-radius: .38rem; padding: .32rem .12rem; background: #f1efed; color: #4f4946; text-align: center; font-size: clamp(.64rem, 1vw, .77rem); font-weight: 750; }
+.campaignProgress li:nth-child(1) { --progress-accent: #a63d00; }
+.campaignProgress li:nth-child(2) { --progress-accent: #344fb5; }
+.campaignProgress li:nth-child(3) { --progress-accent: #6545a8; }
+.campaignProgress li:nth-child(4) { --progress-accent: #14724f; }
+.marketingCursor { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .marketingAudience, .marketingCreative, .marketingReport { animation: reveal-scene .62s ease both; }
+  .marketingAudience { animation-delay: 3s; }
+  .marketingCreative { animation-delay: 6.35s; }
+  .marketingReport { animation-delay: 10.35s; }
+  .marketingDraft .campaignAction { animation: press-action .3s ease 2.7s; }
+  .marketingAudience .campaignAction { animation: press-action .3s ease 6.05s; }
+  .marketingCreative .campaignAction { animation: press-action .3s ease 10.05s; }
+  .campaignResults > div { animation: show-result .55s ease 10.9s both; }
+  .campaignResults > div:nth-child(2) { animation-delay: 11.25s; }
+  .campaignResults > div:nth-child(3) { animation-delay: 11.6s; }
+  .campaignCosts, .campaignInsight { animation: show-result .5s ease 12.05s both; }
+  .campaignProgress li { animation: active-step 3s step-end; }
+  .campaignProgress li:nth-child(2) { animation-duration: 3.35s; animation-delay: 3s; }
+  .campaignProgress li:nth-child(3) { animation-duration: 4s; animation-delay: 6.35s; }
+  .campaignProgress li:nth-child(4) { animation-duration: 4.65s; animation-delay: 10.35s; }
+  .marketingCursor {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    filter: drop-shadow(1px 2px 3px #0008);
+    pointer-events: none;
+    animation: marketing-pointer 15s ease-in-out both;
+  }
+  .marketingCursor span {
+    position: absolute;
+    width: 1.55rem;
+    height: 1.55rem;
+    border: 2px solid #ff8938;
+    border-radius: 100%;
+    animation: marketing-click 15s ease-out both;
+  }
+}
+@keyframes reveal-scene { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes press-action { 50% { transform: scale(.96); filter: brightness(1.4); } }
+@keyframes show-result { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes active-step { from { color: #fff; background: var(--progress-accent); } to { color: #4f4946; background: #f1efed; } }
+@keyframes marketing-pointer {
+  0% { left: 20%; top: 68%; opacity: 0; }
+  10% { left: 31%; top: 54%; opacity: 1; }
+  17%, 21%, 39%, 44%, 66%, 71% { left: calc(100% - 5.4rem); top: calc(100% - 2rem); opacity: 1; }
+  32% { left: 50%; top: 48%; opacity: 1; }
+  53% { left: 47%; top: 40%; opacity: 1; }
+  77%, 100% { left: 83%; top: 75%; opacity: 0; }
+}
+@keyframes marketing-click {
+  0%, 17%, 39%, 66%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+  18%, 40.5%, 67% { opacity: 1; transform: translate(-50%, -50%) scale(.6); }
+  21%, 44%, 71% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+}

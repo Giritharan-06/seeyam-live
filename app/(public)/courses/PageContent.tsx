@@ -45,8 +45,6 @@ function CoursesListingContent() {
     return true;
   }).sort((a, b) => {
     if (sortBy === "RATING") return b.rating - a.rating;
-    if (sortBy === "PRICE_LOW") return a.price - b.price;
-    if (sortBy === "PRICE_HIGH") return b.price - a.price;
     if (sortBy === "POPULAR") return b.enrolledCount - a.enrolledCount;
     return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
   });
@@ -114,8 +112,6 @@ function CoursesListingContent() {
                 <option value="FEATURED">Sort: Featured First</option>
                 <option value="POPULAR">Sort: Most Enrolled</option>
                 <option value="RATING">Sort: Highest Rated</option>
-                <option value="PRICE_LOW">Price: Low to High</option>
-                <option value="PRICE_HIGH">Price: High to Low</option>
               </select>
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
+import { suppressEnquiryPrompt } from "@/lib/enquiry-prompt";
 import LeadModal from "./LeadModal";
 
 interface LeadModalContextType {
@@ -22,18 +23,19 @@ export function LeadModalProvider({ children }: { children: React.ReactNode }) {
   const [reason, setReason] = useState<"ENQUIRY" | "BROCHURE_DOWNLOAD" | "DEMO_VIDEO" | undefined>();
   const [brochureUrl, setBrochureUrl] = useState<string | undefined>();
 
-  const openLeadModal = (
+  const openLeadModal = useCallback((
     cId?: string,
     bId?: string,
     r?: "ENQUIRY" | "BROCHURE_DOWNLOAD" | "DEMO_VIDEO",
     bUrl?: string
   ) => {
+    suppressEnquiryPrompt();
     setCourseId(cId);
     setBranchId(bId);
     setReason(r);
     setBrochureUrl(bUrl);
     setIsOpen(true);
-  };
+  }, []);
 
   const closeLeadModal = () => {
     setIsOpen(false);
@@ -42,14 +44,13 @@ export function LeadModalProvider({ children }: { children: React.ReactNode }) {
   return (
     <LeadModalContext.Provider value={{ openLeadModal, closeLeadModal }}>
       {children}
-      <LeadModal
-        isOpen={isOpen}
+      {isOpen && <LeadModal
         onClose={closeLeadModal}
         initialCourseId={courseId}
         initialBranchId={branchId}
         initialReason={reason}
         initialBrochureUrl={brochureUrl}
-      />
+      />}
     </LeadModalContext.Provider>
   );
 }

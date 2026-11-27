@@ -1,5 +1,5 @@
 import { contactDetails } from "@/lib/contact";
-import { publishedSyllabus } from "@/lib/course-curriculum";
+import { publicSyllabus, syllabusTopicTitle } from "@/lib/syllabus-topics";
 import { getBasePlatform } from "../published-platform";
 import { db, prisma } from "../db";
 import { emptySeo } from "../seo-fields";
@@ -82,8 +82,8 @@ export async function editorData() {
       summary: c.summary,
       duration: c.duration,
       price: String(c.price),
-      syllabus: publishedSyllabus(c.slug, c.syllabus, [])
-        .map((s) => [s.title, s.duration, s.topics.join("; ")].join(" | "))
+      syllabus: publicSyllabus(c.slug, c.syllabus, [])
+        .map((s) => [syllabusTopicTitle(s.title) || "Additional course topics", s.topics.join("; ")].join(" | "))
         .join("\n"),
       highlights: c.highlights.join("\n"),
       featured: String(c.isFeatured),

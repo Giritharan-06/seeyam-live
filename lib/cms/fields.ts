@@ -96,7 +96,7 @@ export const fields = {
     f("price", "Fees", "number", true),
     f(
       "syllabus",
-      "Modules · title | duration | topics separated by semicolons",
+      "Syllabus · topic | subtopics separated by semicolons",
       "lines",
     ),
     f("highlights", "Features · one per line", "lines"),

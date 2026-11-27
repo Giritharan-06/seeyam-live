@@ -37,9 +37,8 @@ import {
   MOCK_BATCHES,
   MOCK_REVIEWS,
 } from "@/lib/mock-data";
-import { formatCurrency } from "@/lib/utils";
 import CounterNumber from "@/components/CounterNumber";
-import CourseSyllabusAccordion from "@/components/CourseSyllabusAccordion";
+import CourseSyllabus from "@/components/CourseSyllabus";
 import CourseInterviewQuestions from "@/components/CourseInterviewQuestions";
 import CourseHeroBrochureButton from "@/components/CourseHeroBrochureButton";
 import UpcomingBatches from "@/components/UpcomingBatches";
@@ -140,9 +139,6 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
   const office = contactDetails((await getCatalog()).settings);
 
-  // Calculate monthly EMI approximation (6 months zero interest)
-  const emiPerMonth = Math.round(course.price / 6);
-
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
       <PageStructuredData path={`/courses/${course.slug}`} />
@@ -203,7 +199,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
               </p>
 
               {/* Quick Spec Chips */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
                 <div className="bg-[#0b224d] p-3 rounded-2xl border border-[#16356c]">
                   <div className="text-[10px] text-slate-400 uppercase font-bold">Duration</div>
                   <div className="text-xs font-extrabold text-white mt-0.5 flex items-center gap-1">
@@ -227,34 +223,12 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                   </div>
                 </div>
 
-                <div className="bg-[#0b224d] p-3 rounded-2xl border border-[#16356c]">
-                  <div className="text-[10px] text-slate-400 uppercase font-bold">Starting Tuition</div>
-                  <div className="text-xs font-extrabold text-white mt-0.5">
-                    {formatCurrency(course.price)}
-                  </div>
-                </div>
               </div>
             </div>
 
             {/* Right: Action Card */}
             <div className="lg:col-span-4 bg-white text-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4" data-card-3d="analytics" data-card-density="regular">
               <img src={course.image || courseArtworkUrl(course.slug) || "/images/card-photos/analytics-screen.jpg"} alt="" width={480} height={200} className="aspect-[12/5] w-full rounded-xl object-cover" />
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-bold">
-                    All-Inclusive Starting Fee
-                  </div>
-                  <div className="text-2xl font-black text-[#071938]">
-                    {formatCurrency(course.price)}
-                  </div>
-                  <div className="text-[10px] font-semibold text-emerald-600 mt-0.5">
-                    or {formatCurrency(emiPerMonth)}/month (No-Cost EMI)
-                  </div>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200">
-                  EMI Available
-                </span>
-              </div>
 
               <ul className="space-y-2 text-xs text-slate-700">
                 <li className="flex items-center gap-2">
@@ -340,10 +314,8 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
             </div>
           </section>
 
-          {/* Module-by-Module Collapsible Syllabus Accordion */}
-          <CourseSyllabusAccordion
+          <CourseSyllabus
             courseId={course.id}
-            courseTitle={course.title}
             brochureUrl={course.brochureUrl}
             syllabus={course.syllabus}
           />
@@ -426,27 +398,27 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
         {/* Right Column: Sticky Contact Card & Related Courses */}
         <div className="lg:col-span-4 space-y-6">
           {/* Quick Counselor Card */}
-          <div className="bg-[#071938] text-white rounded-3xl p-6 shadow-xl border border-[#0f2956] space-y-4 sticky top-24" data-card-3d="analytics" data-card-density="compact">
+          <div className="space-y-4 rounded-3xl border border-neutral-800 bg-neutral-950 p-6 text-white shadow-xl lg:sticky lg:top-24">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold">
+              <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#422311] text-[#ffad72]">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-extrabold text-sm text-white">Speak with Course Mentor</h4>
-                <div className="text-[11px] text-amber-400 font-semibold">
+                <h2 className="font-extrabold text-base text-white">Speak with Course Mentor</h2>
+                <div className="mt-0.5 text-xs font-semibold text-[#ffad72]">
                   Free Career Counseling
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Have questions about batch timings, fee installments, or career transitions? Connect with our senior academic counselor today.
+            <p className="text-sm leading-relaxed text-neutral-200">
+              Ask about batch schedules, what you’ll learn, or how the course fits your career plans.
             </p>
 
             <div className="space-y-2 pt-2">
               <a
                 href={phoneHref(office.phone)}
-                className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-extrabold text-xs shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-105"
+                className="premiere-primary w-full justify-center"
               >
                 <Phone className="w-4 h-4" />
                 <span>Call admissions {office.phone}</span>
@@ -456,24 +428,18 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                 href={whatsappHref(office.whatsapp, "Hi SEEYAM, I’m interested in " + course.title + ".")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 rounded-2xl bg-[#0e2a5c] hover:bg-[#163d7e] text-slate-200 font-bold text-xs border border-[#1d4282] flex items-center justify-center gap-2 transition-colors"
+                className="premiere-outline w-full justify-center"
               >
-                <MessageSquare className="w-4 h-4 text-emerald-400" />
+                <MessageSquare className="w-4 h-4 text-[#ffad72]" />
                 <span>Chat on WhatsApp</span>
               </a>
 
-              <CourseHeroBrochureButton
-                courseId={course.id}
-                brochureUrl={course.brochureUrl}
-                variant="secondary"
-                className="bg-[#0b224d] hover:bg-[#123166] text-slate-200 border border-[#1a4185]"
-              />
             </div>
 
             {/* Related Courses */}
             {relatedCourses.length > 0 && (
-              <div className="pt-4 border-t border-[#0f2956]">
-                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <div className="border-t border-neutral-700 pt-4">
+                <div className="mb-2 text-xs font-bold text-neutral-300">
                   Similar Programs
                 </div>
                 <div className="space-y-2">
@@ -481,17 +447,12 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                     <Link
                       key={rel.id}
                       href={`/courses/${rel.slug}`}
-                      className="block p-3 rounded-xl bg-[#0b224d] hover:bg-[#102d64] border border-[#16356c] text-left transition-colors group"
+                      className="block rounded-xl border border-neutral-700 bg-neutral-900 p-3 text-left transition-colors hover:bg-neutral-800"
                     >
-                      <div className="font-bold text-xs text-white group-hover:text-blue-400 transition-colors truncate">
+                      <div className="text-xs font-bold text-white">
                         {rel.title}
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
-                        <span>{rel.duration}</span>
-                        <span className="text-amber-400 font-bold">
-                          {formatCurrency(rel.price)}
-                        </span>
-                      </div>
+                      <div className="mt-1 text-xs text-neutral-300">{rel.duration}</div>
                     </Link>
                   ))}
                 </div>

@@ -108,7 +108,7 @@ export function crmStore(p: PrismaClient) {
         if (existing) {
           const notes = [
             note(
-              "Repeated inquiry via " + (d.source || "Website Form"),
+                "Repeated inquiry via " + (d.source || "Website Form"),
               "System",
             ),
             ...lead(existing).notes,

@@ -16,6 +16,7 @@ import {
   JobPortalLinkData,
 } from "@/lib/mock-data";
 import { fetchLivePlatformData } from "@/actions/platform";
+import type { PublicPlatformData } from "@/lib/published-platform";
 import {
   type AllPlatformDataResponse,
   type PlatformSettings,
@@ -23,7 +24,7 @@ import {
 
 interface PlatformDataContextType {
   cms?: import("@/lib/cms/fields").Item[];
-  courses: CourseData[];
+  courses: PublicPlatformData["courses"];
   branches: BranchData[];
   categories: CategoryData[];
   reviews: ReviewData[];
@@ -46,7 +47,7 @@ export function PlatformDataProvider({
   initial,
 }: {
   children: React.ReactNode;
-  initial: AllPlatformDataResponse;
+  initial: PublicPlatformData;
 }) {
   const [data, setData] = useState(initial);
   const [loading, setLoading] = useState(false);

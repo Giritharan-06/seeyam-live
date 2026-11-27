@@ -69,8 +69,8 @@ export default function HomePage() {
     </section>,
     counseling: <section className="premiere-career">
       <div className="premiere-container flex flex-wrap items-center justify-between gap-6 py-9">
-        <div><h2 className="text-2xl font-extrabold sm:text-3xl">Find the program that fits your goals.</h2><p className="mt-2 text-sm text-blue-100">Talk through the curriculum, learning options and schedule before you enroll.</p></div>
-        <button className="premiere-primary" onClick={() => openLeadModal()}>Book a free demo <ArrowRight size={16}/></button>
+        <div><h2 className="text-2xl font-extrabold sm:text-3xl">Find the program that fits your goals.</h2><p className="mt-2 text-sm text-neutral-200">Talk through the curriculum, learning options and schedule before you enroll.</p></div>
+        <button className="premiere-primary" onClick={() => openLeadModal(undefined, undefined, "DEMO_VIDEO")}>Book a free demo <ArrowRight size={16}/></button>
       </div>
     </section>,
   };

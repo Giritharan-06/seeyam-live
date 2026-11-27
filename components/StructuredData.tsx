@@ -1,8 +1,9 @@
 import { contactDetails, SEEYAM_CONTACT } from "@/lib/contact";
 import React from "react";
 import type { AllPlatformDataResponse } from "@/lib/wordpress";
+import type { PublicPlatformData } from "@/lib/published-platform";
 
-export function GlobalStructuredData({catalog}:{catalog:AllPlatformDataResponse}) {
+export function GlobalStructuredData({catalog}:{catalog:PublicPlatformData}) {
   const office = contactDetails(catalog.settings);
   const organizationData = {
     "@type": "EducationalOrganization",
@@ -61,13 +62,6 @@ export function GlobalStructuredData({catalog}:{catalog:AllPlatformDataResponse}
           "@type": "Person",
           "name": "Senior Industry Practitioner (8+ Yrs Exp)"
         }
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": course.price,
-        "priceCurrency": "INR",
-        "category": "Paid",
-        "availability": "https://schema.org/InStock"
       },
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -171,7 +165,6 @@ export function CourseDetailSchema({
     summary: string;
     mode: string;
     duration: string;
-    price: number;
     rating: number;
     enrolledCount: number;
   };
@@ -203,13 +196,6 @@ export function CourseDetailSchema({
         "@type": "Person",
         "name": "Senior Technical Architect",
       },
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": course.price,
-      "priceCurrency": "INR",
-      "category": "Paid",
-      "availability": "https://schema.org/InStock",
     },
     "aggregateRating": {
       "@type": "AggregateRating",

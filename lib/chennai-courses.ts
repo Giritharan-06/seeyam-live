@@ -35,7 +35,7 @@ export const chennaiCourses = {
       { title: "Track and improve conversions", text: "Set up a measurement plan with GA4 and Google Tag Manager and assess where visitors drop off." },
     ],
     faq: [
-      { question: "What does the digital marketing course cover?", answer: "The program covers web analytics, Google Ads, paid social, conversion optimisation and attribution. Open the syllabus for the current module list." },
+      { question: "What does the digital marketing course cover?", answer: "The program covers web analytics, Google Ads, paid social, conversion optimisation and attribution. Open the syllabus for the full list of topics." },
       { question: "Can I learn campaign measurement?", answer: "Yes. The curriculum includes GA4 events, Google Tag Manager, funnel reports and measuring conversions." },
     ],
   },

@@ -5,9 +5,9 @@ import {
   AllPlatformDataResponse,
   PlatformSettings,
 } from "@/lib/wordpress";
-import { getPublishedPlatform } from "@/lib/published-platform";
+import { getPublishedPlatform, type PublicPlatformData } from "@/lib/published-platform";
 
-export async function fetchLivePlatformData(): Promise<AllPlatformDataResponse> {
+export async function fetchLivePlatformData(): Promise<PublicPlatformData> {
   return getPublishedPlatform();
 }
 

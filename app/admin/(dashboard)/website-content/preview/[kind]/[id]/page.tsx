@@ -14,6 +14,7 @@ import Reviews from "@/app/(public)/reviews/PageContent";
 import CmsDirectory from "@/components/CmsDirectory";
 import EditorialSection from "@/components/EditorialSection";
 import HomeCourseCard from "@/components/HomeCourseCard";
+import CourseSyllabus from "@/components/CourseSyllabus";
 export const dynamic = "force-dynamic";
 export const metadata = {
   robots: { index: false, follow: false },
@@ -111,14 +112,7 @@ export default async function Preview({
         <HomeCourseCard
           course={course}
         />
-        {course.syllabus.map((m, i) => (
-          <section className="py-3" key={i}>
-            <h2>
-              {m.title} · {m.duration}
-            </h2>
-            <p>{m.topics.join(", ")}</p>
-          </section>
-        ))}
+        <CourseSyllabus courseId={course.id} syllabus={course.syllabus} />
       </div>
     );
   }

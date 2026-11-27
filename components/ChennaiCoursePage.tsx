@@ -3,9 +3,11 @@ import Link from "next/link";
 import { chennaiCourses, type ChennaiTrack } from "@/lib/chennai-courses";
 import { contactDetails, phoneHref } from "@/lib/contact";
 import { getCatalog } from "@/lib/public-catalog";
-import CourseSyllabusAccordion from "@/components/CourseSyllabusAccordion";
+import CourseSyllabus from "@/components/CourseSyllabus";
 import HomeCourseCard from "@/components/HomeCourseCard";
 import PageStructuredData from "@/components/PageStructuredData";
+import AnalyticsHeroVisual from "@/components/AnalyticsHeroVisual";
+import MarketingHeroVisual from "@/components/MarketingHeroVisual";
 
 export default async function ChennaiCoursePage({ track }: { track: ChennaiTrack }) {
   const guide = chennaiCourses[track];
@@ -13,12 +15,13 @@ export default async function ChennaiCoursePage({ track }: { track: ChennaiTrack
   const course = catalog.courses.find(item => item.slug === guide.courseSlug);
   const related = guide.related.flatMap(slug => catalog.courses.filter(item => item.slug === slug));
   const office = contactDetails(catalog.settings);
+  const isAnalytics = track === "analytics";
 
   return (
     <>
       <PageStructuredData path={guide.path} />
-      <section className="public-banner public-banner--with-photo bg-[#101010] py-14 text-white sm:py-20">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <section className="public-banner grid bg-[#101010] text-white lg:grid-cols-2">
+        <div className="w-full px-5 py-12 sm:px-8 sm:py-16 lg:ml-auto lg:max-w-[40rem] lg:self-center">
           <a href={office.maps} className="mb-4 inline-flex items-start gap-2 text-sm font-bold leading-snug text-[#ffb17a] hover:underline">
             <MapPin size={16} aria-hidden="true" className="mt-0.5 shrink-0" /> <span>{office.displayAddress}</span>
           </a>
@@ -29,7 +32,7 @@ export default async function ChennaiCoursePage({ track }: { track: ChennaiTrack
             <Link href="/contact" className="premiere-outline">Ask about the next batch</Link>
           </div>
         </div>
-        <img className="public-banner-photo" src={guide.image} alt="" fetchPriority="high" />
+        {isAnalytics ? <AnalyticsHeroVisual /> : <MarketingHeroVisual />}
       </section>
 
       <div className="premiere-container space-y-10 py-10 sm:space-y-14 sm:py-14">
@@ -54,11 +57,11 @@ export default async function ChennaiCoursePage({ track }: { track: ChennaiTrack
         </section>
 
         {course?.syllabus.length ? (
-          <CourseSyllabusAccordion courseId={course.id} courseTitle={course.title} brochureUrl={course.brochureUrl} syllabus={course.syllabus} />
+          <CourseSyllabus courseId={course.id} brochureUrl={course.brochureUrl} syllabus={course.syllabus} />
         ) : (
           <section id="syllabus" className="scroll-mt-28 rounded-3xl border border-neutral-200 p-6">
             <h2 className="text-xl font-bold">Course syllabus</h2>
-            <p className="mt-2 text-sm text-neutral-700">Contact admissions for the current module list and batch availability.</p>
+            <p className="mt-2 text-sm text-neutral-700">Contact admissions for the current syllabus and batch availability.</p>
             <Link href="/contact" className="mt-4 inline-block font-bold text-[#913400]">Contact admissions</Link>
           </section>
         )}
