@@ -1,11 +1,13 @@
 "use client";
 
+import { suppressEnquiryPrompt } from "@/lib/enquiry-prompt";
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   X,
-  Sparkles,
+  CircleDot,
   CheckCircle,
   Download,
   ArrowRight,
@@ -16,6 +18,7 @@ import {
 } from "lucide-react";
 import { publicLeadSchema, PublicLeadInput } from "@/lib/validations/schema";
 import { submitPublicLead } from "@/actions/leads";
+import { contactDetails, whatsappHref } from "@/lib/contact";
 import { usePlatformData } from "@/components/PlatformDataContext";
 
 interface LeadModalProps {
@@ -35,7 +38,7 @@ export default function LeadModal({
   initialReason = "ENQUIRY",
   initialBrochureUrl,
 }: LeadModalProps) {
-  const { courses, branches } = usePlatformData();
+  const { courses, branches, siteSettings } = usePlatformData();
   const [serverError, setServerError] = useState<string | null>(null);
   const [serverSuccess, setServerSuccess] = useState<string | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -82,6 +85,7 @@ export default function LeadModal({
     setIsSubmitting(false);
 
     if (result.success) {
+      suppressEnquiryPrompt();
       setServerSuccess(result.message);
       if (result.data?.brochureUrl) {
         setDownloadUrl(result.data.brochureUrl);
@@ -101,7 +105,7 @@ export default function LeadModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div data-enquiry-blocking-overlay className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#071938]/70 backdrop-blur-md animate-fade-in"
@@ -126,7 +130,7 @@ export default function LeadModal({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <CircleDot className="w-3.5 h-3.5 text-amber-400" />
                   Friendly 1-on-1 Career Chat
                 </>
               )}
@@ -192,7 +196,7 @@ export default function LeadModal({
                   Return to Website
                 </button>
                 <a
-                  href="https://wa.me/918939915577?text=Hi%20Seeyam%20Technologies,%20I%20just%20submitted%20my%20form%20and%20want%20instant%20updates."
+                  href={whatsappHref(contactDetails(siteSettings).whatsapp, "Hi SEEYAM, I just submitted an enquiry.")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-50 transition-colors"

@@ -1,6 +1,7 @@
 import PageStructuredData from "@/components/PageStructuredData";
 import { withPageSeo } from "@/lib/seo";
 import React from "react";
+import CampusMap from "@/components/CampusMap";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -12,7 +13,7 @@ import {
   Clock,
   Mail,
   Navigation,
-  Sparkles,
+  CircleDot,
   ArrowRight,
   ShieldCheck,
   Laptop,
@@ -23,7 +24,8 @@ import {
   Star,
   GraduationCap,
 } from "lucide-react";
-import { publicCatalog as db } from "@/lib/public-catalog";
+import { getCatalog, publicCatalog as db } from "@/lib/public-catalog";
+import { contactDetails } from "@/lib/contact";
 import {
   MOCK_BRANCHES,
   MOCK_BATCHES,
@@ -81,6 +83,7 @@ export default async function BranchDetailPage({
   const branchReviews = await db.getApprovedReviews(undefined, branch.id);
   const allCourses = await db.getCourses();
   const allBranches = await db.getBranches();
+  const { maps, displayAddress } = contactDetails((await getCatalog()).settings);
 
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
@@ -101,7 +104,7 @@ export default async function BranchDetailPage({
       </div>
 
       {/* Hero Banner */}
-      <section className="bg-[#071938] text-white py-14 relative overflow-hidden border-b border-[#0f2956]">
+      <section className="public-banner public-banner--branches bg-[#071938] text-white py-14 relative overflow-hidden border-b border-[#0f2956]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -117,20 +120,20 @@ export default async function BranchDetailPage({
               </h1>
 
               <div className="space-y-2 text-xs sm:text-sm text-slate-300">
-                <div className="flex items-start gap-2">
+                <a href={maps} className="flex items-start gap-2 font-bold text-white hover:underline">
                   <MapPin className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                  <span>{branch.address}</span>
-                </div>
+                  <span>{displayAddress}</span>
+                </a>
                 {branch.landmark && (
                   <div className="flex items-center gap-2 text-slate-400 pl-6">
                     <span className="font-semibold text-slate-300">Landmark:</span>
                     <span>{branch.landmark}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-slate-400 pl-6">
+                {branch.timing && <div className="flex items-center gap-2 text-slate-400 pl-6">
                   <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
                   <span>{branch.timing}</span>
-                </div>
+                </div>}
               </div>
 
               {/* Action Buttons */}
@@ -157,6 +160,7 @@ export default async function BranchDetailPage({
 
             {/* Quick Visit Card */}
             <div className="lg:col-span-4 bg-white text-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4" data-card-3d="campus" data-card-density="regular">
+              <img src={"/images/card-photos/classroom-laptop.jpg"} alt="" width={480} height={200} className="aspect-[12/5] w-full rounded-xl object-cover" />
               <h3 className="font-extrabold text-base text-[#071938]">
                 Walk-in & Free Demo Session
               </h3>
@@ -200,23 +204,18 @@ export default async function BranchDetailPage({
               <Navigation className="w-5 h-5 text-blue-600" />
               <span>Campus Map & Directions</span>
             </h2>
-            <div className="rounded-2xl overflow-hidden border border-slate-200 h-80 bg-slate-100">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
               {branch.mapEmbedUrl ? (
-                <iframe
-                  title={branch.name}
-                  src={branch.mapEmbedUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen={false}
-                  loading="lazy"
-                />
+                <CampusMap src={branch.mapEmbedUrl} title={`Map of SEEYAM ${branch.name} campus`} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
                   Map not available
                 </div>
               )}
             </div>
+            <a href={maps} className="inline-flex items-center gap-2 text-sm font-bold text-[#9c3700] hover:underline">
+              <Navigation size={16} aria-hidden="true" /> Open in Google Maps
+            </a>
           </section>
 
           {/* Batches Starting at this Branch */}

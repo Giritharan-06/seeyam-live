@@ -6,7 +6,7 @@ import {
   Database,
   Play,
   RotateCcw,
-  Sparkles,
+  CircleDot,
   ChevronRight,
   Code2,
   Table,
@@ -168,7 +168,7 @@ export default function SqlCompilerPage() {
       </div>
 
       {/* Hero Banner */}
-      <section className="bg-[#071938] text-white py-12 relative overflow-hidden border-b border-[#0f2956]">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-12 relative overflow-hidden border-b border-[#0f2956]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30">
@@ -182,6 +182,7 @@ export default function SqlCompilerPage() {
             Practice real SQL queries without installing MySQL or PostgreSQL. Run SELECT, WHERE, GROUP BY, and aggregate functions directly in your browser.
           </p>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/code-screen.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* Compiler Main Grid */}
@@ -297,7 +298,7 @@ export default function SqlCompilerPage() {
           {/* Sample Queries */}
           <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-3" data-card-3d="learning" data-card-density="compact">
             <h3 className="font-extrabold text-xs sm:text-sm text-[#071938] flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <CircleDot className="w-4 h-4 text-amber-500" />
               <span>Click-to-Run Sample Queries</span>
             </h3>
             <p className="text-[11px] text-slate-500">

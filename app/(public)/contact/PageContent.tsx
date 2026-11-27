@@ -1,5 +1,7 @@
 "use client";
 
+import { suppressEnquiryPrompt } from "@/lib/enquiry-prompt";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -8,7 +10,7 @@ import {
   MapPin,
   MessageSquare,
   Clock,
-  Sparkles,
+  CircleDot,
   CheckCircle2,
   AlertCircle,
   Building2,
@@ -21,6 +23,8 @@ import {
 import { submitPublicLead } from "@/actions/leads";
 import { usePlatformData } from "@/components/PlatformDataContext";
 import { decodeHtml } from "@/lib/utils";
+import CampusMap from "@/components/CampusMap";
+import { contactDetails, phoneHref, SEEYAM_CAMPUS, whatsappHref } from "@/lib/contact";
 
 const FAQS = [
   {
@@ -33,7 +37,7 @@ const FAQS = [
   },
   {
     q: "Can I attend a free demo class before enrolling?",
-    a: "Absolutely! We offer free 1-on-1 career consultation and live classroom demo sessions across all our campuses and online. You can interact directly with the trainer before making any payment.",
+    a: "Absolutely! We offer free 1-on-1 career consultation and live classroom demo sessions at our Chennai campus and online. You can interact directly with the trainer before making any payment.",
   },
   {
     q: "Do you offer weekend batches for working professionals?",
@@ -75,8 +79,7 @@ export default function ContactPage() {
     }
   }
 
-  const helplinePhone = siteSettings?.footer_phone || siteSettings?.navbar_helpline_phone || "+91 89399 15577";
-  const contactEmail = siteSettings?.footer_email || "info@seeyamtechnologies.com";
+  const { phone, whatsapp, email: contactEmail, displayAddress, maps } = contactDetails(siteSettings);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +99,7 @@ export default function ContactPage() {
     setLoading(false);
 
     if (res.success) {
+      suppressEnquiryPrompt();
       setSuccess(res.message);
       setFormData({
         fullName: "",
@@ -113,11 +117,11 @@ export default function ContactPage() {
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
       {/* Header Banner (Eduma Deep Navy Header) */}
-      <section className="bg-[#071938] text-white py-16 border-b border-[#0f2956]">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-16 border-b border-[#0f2956]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-400" />
               <span>Get Free 1-on-1 Academic Counseling</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
@@ -128,6 +132,7 @@ export default function ContactPage() {
             </p>
           </div>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/career-consultation.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* Main Grid: Form + Direct Helplines */}
@@ -160,13 +165,11 @@ export default function ContactPage() {
                 <p className="text-xs text-blue-700 max-w-sm mx-auto">{success}</p>
                 <div className="pt-2">
                   <a
-                    href="https://wa.me/918939915577?text=Hi%20Seeyam%20Technologies,%20I%20just%20submitted%20my%20contact%20inquiry."
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={whatsappHref(whatsapp)}
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-sm"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
-                    <span>Chat on WhatsApp for Instant Updates</span>
+                    <span>Chat on WhatsApp for updates</span>
                   </a>
                 </div>
               </div>
@@ -292,7 +295,7 @@ export default function ContactPage() {
 
           {/* Right Column: Direct Helplines & Branch Directory */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Toll Free Card */}
+            {/* Contact details */}
             <div className="bg-[#071938] text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-[#0f2956] space-y-4" data-card-3d="review" data-card-density="regular">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30">
                 <Phone className="w-3.5 h-3.5 text-amber-400" />
@@ -304,21 +307,16 @@ export default function ContactPage() {
               </p>
 
               <div className="space-y-3 pt-2">
-                <a
-                  href={`tel:${helplinePhone.replace(/[^0-9+]/g, "")}`}
-                  className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#0b224d] hover:bg-[#102d64] border border-[#16356c] transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">
-                    <Phone className="w-5 h-5" />
-                  </div>
+                <a href={phoneHref(phone)} className="flex items-center gap-3 rounded-2xl border border-[#16356c] bg-[#0b224d] p-3.5 transition-colors hover:bg-[#102d64]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white"><Phone className="h-5 w-5" /></div>
                   <div>
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Direct Line</div>
-                    <div className="font-extrabold text-sm text-white">{helplinePhone}</div>
+                    <div className="text-[10px] font-bold uppercase text-slate-400">Direct line</div>
+                    <div className="text-sm font-extrabold text-white">{phone}</div>
                   </div>
                 </a>
 
                 <a
-                  href={`https://wa.me/${helplinePhone.replace(/[^0-9]/g, "")}?text=Hi%20Seeyam%20Technologies,%20I%20would%20like%20to%20know%20more%20about%20your%20IT%20courses.`}
+                  href={whatsappHref(whatsapp)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#0b224d] hover:bg-[#102d64] border border-[#16356c] transition-colors"
@@ -328,10 +326,18 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="text-[10px] text-slate-400 uppercase font-bold">WhatsApp Desk</div>
-                    <div className="font-extrabold text-sm text-white">Chat with Advisor</div>
+                    <div className="font-extrabold text-sm text-white">{whatsapp}</div>
                   </div>
                 </a>
 
+                <a href={maps} className="flex items-center gap-3 rounded-2xl border border-[#16356c] bg-[#0b224d] p-3.5 transition-colors hover:bg-[#102d64]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white"><MapPin className="h-5 w-5" /></div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase text-slate-400">Chennai office</div>
+                    <p className="text-sm font-bold leading-relaxed text-white">{displayAddress}</p>
+                    <span className="mt-1 block text-xs text-amber-300 underline">View on Google Maps</span>
+                  </div>
+                </a>
                 <a
                   href={`mailto:${contactEmail}`}
                   className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#0b224d] hover:bg-[#102d64] border border-[#16356c] transition-colors"
@@ -349,31 +355,8 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Quick Branch Phone Directory */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3" data-card-3d="review" data-card-density="regular">
-              <h4 className="font-extrabold text-sm text-[#071938]">
-                Direct Campus Phone Numbers
-              </h4>
-              <div className="divide-y divide-slate-100 text-xs">
-                {branches.map((b) => (
-                  <div
-                    key={b.id}
-                    className="py-2.5 flex items-center justify-between hover:bg-slate-50 px-2 rounded-xl transition-colors"
-                  >
-                    <div>
-                      <div className="font-bold text-[#071938]">{b.name}</div>
-                      <div className="text-[10px] text-slate-400">{b.city}</div>
-                    </div>
-                    <a
-                      href={`tel:${b.phone.replace(/[^0-9+]/g, "")}`}
-                      className="font-bold text-blue-600 hover:underline text-xs"
-                    >
-                      {b.phone}
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <CampusMap src={branches[0]?.mapEmbedUrl || SEEYAM_CAMPUS.mapEmbedUrl} title="Map of SEEYAM Chennai office" />
+
           </div>
         </div>
       </section>

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {
   X,
   Star,
-  Sparkles,
+  CircleDot,
   CheckCircle2,
   AlertCircle,
   MessageSquarePlus,
@@ -88,7 +88,7 @@ export default function ReviewModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div data-enquiry-blocking-overlay className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#071938]/70 backdrop-blur-sm animate-fade-in"
@@ -101,7 +101,7 @@ export default function ReviewModal({
         <div className="flex items-start justify-between pb-4 border-b border-slate-100">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold mb-1 border border-blue-200">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-500" />
               <span>Verified Alumni Feedback</span>
             </div>
             <h3 className="text-xl font-extrabold text-[#071938]">

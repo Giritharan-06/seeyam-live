@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Share2,
   BookOpen,
-  Sparkles,
+  CircleDot,
   CheckCircle2,
   HelpCircle,
   Download,
@@ -21,7 +21,7 @@ import {
   Phone,
 } from "lucide-react";
 import { BLOG_POSTS, BlogPost } from "@/lib/blog-data";
-import { db } from "@/lib/db";
+import { publicCatalog } from "@/lib/public-catalog";
 import CourseHeroBrochureButton from "@/components/CourseHeroBrochureButton";
 
 interface BlogPostPageProps {
@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const relatedPosts = BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 3);
-  const targetCourse = await db.getCourseById(post.targetCourseId);
+  const targetCourse = (await publicCatalog.getCourses()).find(c=>c.id===post.targetCourseId);
 
   // Article JSON-LD Schema
   const articleSchema = {
@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       "name": "Seeyam Technologies",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://seeyamtechnologies.com/logo.png",
+        "url": "https://seeyamtechnologies.com/seeyam-lion.png",
       },
     },
     "datePublished": post.publishedDate,
@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </div>
 
       {/* Article Hero Banner */}
-      <section className="bg-[#071938] text-white py-14 border-b border-[#0f2956] relative overflow-hidden">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-14 border-b border-[#0f2956] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="space-y-4">
@@ -163,6 +163,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </div>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/professional-workspace.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* Main Content Article Body */}
@@ -192,7 +193,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Embedded Course Conversion Box */}
           <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#071938] to-[#0d2857] text-white border border-[#163870] shadow-xl space-y-4" data-card-3d="learning" data-card-density="regular">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-extrabold uppercase border border-amber-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
+              <CircleDot className="w-3.5 h-3.5" />
               Recommended Certification Track
             </div>
 

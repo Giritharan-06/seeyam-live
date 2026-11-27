@@ -6,7 +6,7 @@ import {
   Briefcase,
   Search,
   Building2,
-  Sparkles,
+  CircleDot,
   ArrowUpRight,
   TrendingUp,
 } from "lucide-react";
@@ -115,7 +115,7 @@ export default function JobPortalLinks({
 
       <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-center justify-between gap-3 text-xs text-blue-800">
         <span className="flex items-center gap-2 font-medium">
-          <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+          <CircleDot className="w-4 h-4 text-amber-500 shrink-0" />
           <span>Need 1-on-1 resume review before applying? Our placement cell offers free ATS audits.</span>
         </span>
       </div>

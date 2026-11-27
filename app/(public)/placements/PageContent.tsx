@@ -7,7 +7,7 @@ import {
   Building2,
   Users,
   Award,
-  Sparkles,
+  CircleDot,
   CheckCircle,
   Briefcase,
   ArrowRight,
@@ -50,11 +50,11 @@ export default function PlacementsPage() {
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
       {/* Header Banner (Eduma Deep Navy Header) */}
-      <section className="bg-[#071938] text-white py-16 border-b border-[#0f2956]">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-16 border-b border-[#0f2956]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-400" />
               <span>Industry-Leading Career Acceleration</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
@@ -66,6 +66,7 @@ export default function PlacementsPage() {
             </p>
           </div>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/interview-preparation.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* KPI Stats Bar with Count Animation */}
@@ -256,6 +257,7 @@ export default function PlacementsPage() {
                   </div>
 
                   {/* Quote */}
+                  {story.placementDate && <time dateTime={story.placementDate}>{story.placementDate}</time>}
                   {story.quote && (
                     <div className="relative pt-2">
                       <Quote className="w-5 h-5 text-blue-100 absolute -top-1 -left-1 -z-0" />

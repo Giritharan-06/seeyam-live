@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
+  CircleDot,
   ArrowRight,
   CheckCircle,
   Database,
@@ -211,7 +211,7 @@ export default function ToolStackScrollShowcase({
         <ScrollReveal direction="up">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-xs font-bold mb-4 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-400 animate-spin" />
               <span>THE 6 ESSENTIAL TOOLS OF HIGH-PAID ANALYSTS</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
@@ -335,7 +335,7 @@ export default function ToolStackScrollShowcase({
             <div className="lg:col-span-5">
               <div className="p-6 rounded-2xl bg-white/[0.05] border border-white/10 backdrop-blur-md relative overflow-hidden space-y-4" data-card-3d="analytics" data-card-density="compact">
                 <div className="text-[11px] font-extrabold tracking-wider uppercase text-blue-400 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <CircleDot className="w-3.5 h-3.5 text-amber-400" />
                   <span>Real-World Capstone Deliverable</span>
                 </div>
 

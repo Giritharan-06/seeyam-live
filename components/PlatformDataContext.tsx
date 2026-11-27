@@ -22,6 +22,7 @@ import {
 } from "@/lib/wordpress";
 
 interface PlatformDataContextType {
+  cms?: import("@/lib/cms/fields").Item[];
   courses: CourseData[];
   branches: BranchData[];
   categories: CategoryData[];

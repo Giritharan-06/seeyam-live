@@ -26,6 +26,8 @@ import {
   MOCK_JOB_PORTAL_LINKS,
 } from "@/lib/mock-data";
 import { decodeHtml } from "@/lib/utils";
+import { SEEYAM_CONTACT } from "@/lib/contact";
+import { aboutCopy } from "@/lib/about-copy";
 
 export interface WordPressRendered {
   rendered: string;
@@ -133,6 +135,9 @@ export interface PlatformSettings {
   footer_badge_2?: string;
   footer_phone?: string;
   footer_email?: string;
+  contact_whatsapp?: string;
+  contact_address?: string;
+  contact_maps?: string;
   footer_hours?: string;
   footer_copyright?: string;
   social_facebook?: string;
@@ -156,6 +161,7 @@ export interface PlatformSettings {
 }
 
 export interface AllPlatformDataResponse {
+  cms?: import("./cms/fields").Item[];
   categories: CategoryData[];
   courses: CourseData[];
   branches: BranchData[];
@@ -377,13 +383,13 @@ function getDefaultSettings(): PlatformSettings {
     navbar_badge_1: "ISO 9001:2015 Certified Institute",
     navbar_badge_2: "NASSCOM Aligned Tech Curriculum",
     navbar_badge_3: "100% Placement Assurance",
-    navbar_helpline_phone: "+91 89399 15577",
+    navbar_helpline_phone: SEEYAM_CONTACT.phone,
     footer_about_text:
-      "Empowering engineers and tech graduates with practical, production-grade IT training, masterclasses, and dedicated placement support across Chennai, Bangalore, and Hyderabad.",
+      "Practical IT training, mentor guidance, and career support in Chennai and online.",
     footer_badge_1: "ISO 9001:2015 Certified",
     footer_badge_2: "NASSCOM Aligned",
-    footer_phone: "+91 89399 15577",
-    footer_email: "info@seeyamtechnologies.com",
+    footer_phone: SEEYAM_CONTACT.phone,
+    footer_email: SEEYAM_CONTACT.email,
     footer_hours: "Mon - Sun: 7:00 AM - 9:00 PM",
     footer_copyright: "Seeyam Technologies Pvt. Ltd. All rights reserved.",
     social_facebook: "https://facebook.com/seeyamtech",
@@ -391,22 +397,19 @@ function getDefaultSettings(): PlatformSettings {
     social_linkedin: "https://linkedin.com/company/seeyamtech",
     social_youtube: "https://youtube.com/@seeyamtech",
     social_twitter: "https://twitter.com/seeyamtech",
-    about_hero_badge: "Empowering Tech Careers Since 2014",
-    about_hero_title: "Bridging the Gap Between Academics & Tech Industry Excellence",
-    about_hero_subtitle:
-      "Seeyam Technologies was built on one fundamental promise: deliver hands-on, production-grade IT training mentored by senior corporate architects, paired with guaranteed placement drives.",
-    about_mission_title: "Our Core Mission",
-    about_mission_text:
-      "To transform aspiring engineers, non-IT graduates, and upskilling professionals into job-ready software developers, DevOps practitioners, and AI engineers through real-time industry projects, rigorous code reviews, and guaranteed placement drives.",
-    about_vision_title: "Our Long-term Vision",
-    about_vision_text:
-      "To be India's premier center of excellence for emerging technologies — providing accessible, enterprise-grade education with high-compute lab infrastructure, industry-recognized global certifications, and lifelong career growth networks.",
+    about_hero_badge: "About SEEYAM Technologies",
+    about_hero_title: aboutCopy.title,
+    about_hero_subtitle: aboutCopy.introduction,
+    about_mission_title: "Our mission",
+    about_mission_text: aboutCopy.mission,
+    about_vision_title: "Our commitment",
+    about_vision_text: aboutCopy.commitment,
 
     // Scroll Animation 2 (Secondary)
   };
 }
 
-function getFallbackPlatformData(): AllPlatformDataResponse {
+export function getFallbackPlatformData(): AllPlatformDataResponse {
   return {
     categories: MOCK_CATEGORIES,
     courses: MOCK_COURSES,

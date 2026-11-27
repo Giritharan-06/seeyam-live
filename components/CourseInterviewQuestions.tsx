@@ -8,7 +8,7 @@ import {
   ChevronUp,
   CheckCircle2,
   ExternalLink,
-  Sparkles,
+  CircleDot,
 } from "lucide-react";
 import { InterviewQuestionData } from "@/lib/mock-data";
 

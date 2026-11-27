@@ -13,7 +13,7 @@ import {
   X,
   Edit2,
   Trash2,
-  Sparkles,
+  CircleDot,
   TrendingUp,
   Tag,
   DollarSign,
@@ -232,7 +232,7 @@ export default function CourseCatalogPage() {
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
+              <CircleDot className="w-5 h-5" />
             </div>
           </div>
 

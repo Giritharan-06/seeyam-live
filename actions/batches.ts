@@ -119,7 +119,9 @@ export async function deleteBatch(id: string): Promise<ActionResult<boolean>> {
     console.error("deleteBatch error:", error);
     return {
       success: false,
-      message: "Failed to delete batch.",
+      message: error instanceof Error && "code" in error && error.code === "P2003"
+        ? "This batch has enrolments or trainer assignments. Keep it for staff records or mark it completed."
+        : "Failed to delete batch.",
     };
   }
 }

@@ -73,14 +73,14 @@ export default function AdminLoginPage() {
           >
             <div className="h-8 w-11 rounded-xl bg-white p-0.5 flex items-center justify-center shrink-0 border border-slate-700 overflow-hidden shadow-sm">
               <img
-                src="/logo.png"
+                src="/seeyam-lion.png"
                 alt="Seeyam Logo"
                 className="w-full h-full object-contain"
               />
             </div>
             <div className="text-left">
               <div className="text-xs font-black tracking-tight text-white flex items-center gap-1.5">
-                SEEYAM TECHNOLOGIES
+                SEEYAM
               </div>
             </div>
           </Link>

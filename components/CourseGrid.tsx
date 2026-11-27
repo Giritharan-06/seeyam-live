@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   BookOpen,
   ArrowRight,
-  Sparkles,
+  CircleDot,
   Users,
   ChevronDown,
   ChevronUp,
@@ -89,7 +89,7 @@ export default function CourseGrid({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <CircleDot className="w-3.5 h-3.5 text-amber-500" />
             <span>NASSCOM Aligned Curriculum</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#071938] tracking-tight">

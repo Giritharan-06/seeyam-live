@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {
   ChevronDown,
   HelpCircle,
-  Sparkles,
+  CircleDot,
   Award,
   GraduationCap,
   Briefcase,
@@ -122,7 +122,7 @@ export default function FAQSection({
         {/* Section Title */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <CircleDot className="w-3.5 h-3.5 text-amber-400" />
             <span>{badge || "Got Questions? We Have Answers"}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">

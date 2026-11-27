@@ -17,9 +17,15 @@ import {
   ExternalLink,
   ShieldCheck,
   Search,
-  Sparkles,
+  CircleDot,
   Globe2,
   MessageSquareText,
+  BriefcaseBusiness,
+  ClipboardList,
+  BadgeCheck,
+  Wallet,
+  Bell,
+  ChartNoAxesCombined,
 } from "lucide-react";
 import { logoutAction } from "@/actions/auth";
 import { SessionUser } from "@/lib/auth";
@@ -33,7 +39,7 @@ const NAV_GROUPS = [
     label: "Core Operations",
     items: [
       {
-        name: "Overview / Analytics",
+        name: "Dashboard",
         href: "/admin",
         icon: LayoutDashboard,
         exact: true,
@@ -50,7 +56,7 @@ const NAV_GROUPS = [
         icon: CalendarCheck,
       },
       {
-        name: "Course Catalog",
+        name: "Courses Management",
         href: "/admin/courses",
         icon: BookOpen,
       },
@@ -62,8 +68,29 @@ const NAV_GROUPS = [
     ],
   },
   {
+    label: "Training & Careers",
+    items: [
+      { name: "Students Management", href: "/admin/operations/students", icon: GraduationCap },
+      { name: "Enrolments", href: "/admin/operations/enrolments", icon: CalendarCheck },
+      { name: "Trainers Management", href: "/admin/operations/trainers", icon: Users2 },
+      { name: "Trainer Assignments", href: "/admin/operations/assignments", icon: CalendarCheck },
+      { name: "Job Openings", href: "/admin/operations/jobs", icon: BriefcaseBusiness },
+      { name: "Applications", href: "/admin/operations/applications", icon: ClipboardList },
+      { name: "Placements", href: "/admin/operations/placements", icon: BadgeCheck },
+    ],
+  },
+  {
+    label: "Administration",
+    items: [
+      { name: "Payments", href: "/admin/operations/payments", icon: Wallet },
+      { name: "Reports", href: "/admin/operations/reports", icon: ChartNoAxesCombined },
+      { name: "Notifications", href: "/admin/operations/notifications", icon: Bell },
+    ],
+  },
+  {
     label: "Growth & Visibility",
     items: [
+      { name: "Website Content", href: "/admin/website-content", icon: Globe2 },
       {
         name: "SEO Management",
         href: "/admin/seo",
@@ -80,9 +107,9 @@ const NAV_GROUPS = [
   {
     label: "System",
     items: [
-      { name: "Counselors", href: "/admin/counselors", icon: ShieldCheck },
+      { name: "Users & Roles", href: "/admin/counselors", icon: ShieldCheck },
       {
-        name: "Platform Settings",
+        name: "Settings",
         href: "/admin/settings",
         icon: Settings,
       },
@@ -108,17 +135,17 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   return (
     <aside
-      className={`bg-[#071938] text-slate-300 border-r border-[#0f2956] flex flex-col justify-between transition-all duration-300 z-30 shrink-0 ${
+      className={`bg-indigo-950 text-slate-300 border-r border-[#0f2956] flex flex-col justify-between transition-all duration-300 z-30 shrink-0 ${
         collapsed ? "w-14 md:w-20" : "w-14 md:w-64"
       }`}
     >
       {/* Top Brand Logo */}
-      <div className="flex-1 overflow-y-auto no-scrollbar">
+      <div className="min-h-0 flex-1 overflow-y-auto no-scrollbar">
         <div className="p-2 md:p-4 border-b border-[#0f2956] flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-3 overflow-hidden group">
             <div className="h-8 w-9 md:h-10 md:w-14 rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-[#1d4282] overflow-hidden group-hover:scale-105 transition-transform">
               <img
-                src="/logo.png"
+                src="/seeyam-lion.png"
                 alt="Seeyam Logo"
                 className="w-full h-full object-contain"
               />
@@ -126,7 +153,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
             {!collapsed && (
               <div className="hidden truncate md:block">
                 <div className="font-extrabold text-sm text-white tracking-tight leading-none">
-                  SEEYAM CRM
+                  SEEYAM
                 </div>
                 <div className="text-[10px] text-blue-400 font-semibold uppercase mt-0.5 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
@@ -154,7 +181,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                   {group.label}
                 </div>
               )}
-              {group.items.filter(item => !["/admin/seo", "/admin/counselors"].includes(item.href) || user?.role === "ADMIN").map((item) => {
+              {group.items.filter(item => !["/admin/website-content","/admin/seo", "/admin/counselors", ...["trainers","assignments","payments","reports"].map(area=>"/admin/operations/"+area)].includes(item.href) || user?.role === "ADMIN").map((item) => {
                 const Icon = item.icon;
                 const isActive = item.exact
                   ? pathname === item.href
@@ -166,10 +193,11 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                     href={item.href}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        ? "bg-violet-600 text-white shadow-md shadow-blue-600/25"
                         : "text-slate-400 hover:text-white hover:bg-[#0e2a5c]"
                     }`}
                     aria-label={item.name}
+                    aria-current={isActive ? "page" : undefined}
                     title={item.name}
                   >
                     <Icon

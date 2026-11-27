@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart3, Database, Filter, Lightbulb, Megaphone, MousePointerClick, Target, TrendingUp, Check, Sparkles, Heart, Users } from "lucide-react";
+import { ArrowRight, BarChart3, Database, Filter, Lightbulb, Megaphone, MousePointerClick, Target, TrendingUp, Check, CircleDot, Heart, Users } from "lucide-react";
 import "./student-career-scroll.css";
 
 const stories = {
   analytics: {
     intro: "Follow a shop’s sales from raw numbers to a smarter stock decision.",
-    color: "#087bc4", course: "/courses?search=data", steps: [
+    color: "#9c3700", course: "/courses?search=data", steps: [
       { title: "Start with a real question.", text: "What should the shop restock? Collect its sales: 40 shoes, 80 bags and 60 shirts. Every row is a clue.", tool: "Excel & SQL" },
       { title: "Count every sale once.", text: "A repeated row can change the answer. Remove duplicates, check missing values and organize the records before comparing products.", tool: "SQL & Python" },
       { title: "Let the pattern stand out.", text: "Turn those rows into a chart. Bags lead with 80 sales, ahead of shirts at 60 and shoes at 40. The comparison becomes easy to see.", tool: "Power BI & Tableau" },
@@ -18,7 +18,7 @@ const stories = {
   },
   marketing: {
     intro: "Follow a course campaign from its first message to measurable sign-ups.",
-    color: "#9333c8", course: "/courses?search=marketing", steps: [
+    color: "#b24100", course: "/courses?search=marketing", steps: [
       { title: "Know who you’re talking to.", text: "Imagine promoting a new skills course. Learn what graduates and career switchers need, what they search for and where they spend time online.", tool: "Audience research & SEO" },
       { title: "Make the message matter.", text: "Create an ad that connects a real need with a useful skill. In this example, your campaign reaches 2,000 people.", tool: "Creative strategy & paid ads" },
       { title: "Turn curiosity into a visit.", text: "200 people click through to the course page. Clear benefits, helpful content and an easy next step give them a reason to stay.", tool: "Content & landing pages" },
@@ -40,7 +40,7 @@ function AnalyticsPanels() {
     <div className="journey-panel journey-panel-0">
       <Art name="data-sheets" className="journey-main-art" />
       <Art name="data-chart" className="journey-satellite-art" />
-      <div className="journey-ticket ticket-left"><span className="ticket-icon blue"><Database size={20} /></span><div><small>NEW SALES RECORD</small><strong>40 shoes sold</strong></div><span className="ticket-dot" /></div>
+      <div className="journey-ticket ticket-left"><span className="ticket-icon peach"><Database size={20} /></span><div><small>NEW SALES RECORD</small><strong>40 shoes sold</strong></div><span className="ticket-dot" /></div>
       <div className="journey-ticket ticket-right"><span className="ticket-icon coral">👜</span><div><small>ANOTHER CLUE</small><strong>80 bags sold</strong></div></div>
       <div className="journey-tag tag-bottom"><span>Excel</span><span>SQL</span><strong>Real sales. One useful question.</strong></div>
     </div>
@@ -88,8 +88,8 @@ function MarketingPanels() {
       <Art name="campaign-phone" className="journey-main-art journey-phone-left" />
       <Art name="audience" className="journey-side-audience" />
       <div className="journey-click-path"><MousePointerClick size={26} /><span /><ArrowRight size={25} /></div>
-      <div className="journey-ticket ticket-left"><span className="ticket-icon blue"><MousePointerClick size={20} /></span><div><small>FROM AD TO COURSE PAGE</small><strong>200 interested visitors</strong></div></div>
-      <div className="journey-ticket ticket-right"><span className="ticket-icon yellow"><Sparkles size={20} /></span><div><small>THE NEXT STEP</small><strong>Explore the course ↗</strong></div></div>
+      <div className="journey-ticket ticket-left"><span className="ticket-icon peach"><MousePointerClick size={20} /></span><div><small>FROM AD TO COURSE PAGE</small><strong>200 interested visitors</strong></div></div>
+      <div className="journey-ticket ticket-right"><span className="ticket-icon yellow"><CircleDot size={20} /></span><div><small>THE NEXT STEP</small><strong>Explore the course ↗</strong></div></div>
       <div className="journey-tag tag-bottom"><span>Content</span><span>Landing pages</span><strong>200 visitors explore the course</strong></div>
     </div>
     <div className="journey-panel journey-panel-3">

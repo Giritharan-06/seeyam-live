@@ -1,3 +1,5 @@
+import "./public-palette.css";
+import {GlobalStructuredData} from "@/components/StructuredData";
 import { getCatalog } from "@/lib/public-catalog";
 import PublicShell from "@/components/PublicShell";
 import DynamicThemeProvider from "@/components/DynamicThemeProvider";
@@ -9,8 +11,10 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const catalog=await getCatalog();
   return (
-    <PlatformDataProvider initial={await getCatalog()}>
+    <PlatformDataProvider initial={catalog}>
+      <GlobalStructuredData catalog={catalog}/>
       <DynamicThemeProvider>
         <LeadModalProvider>
           <PublicShell>{children}</PublicShell>

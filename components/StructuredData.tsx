@@ -1,17 +1,19 @@
+import { contactDetails, SEEYAM_CONTACT } from "@/lib/contact";
 import React from "react";
-import { MOCK_COURSES, MOCK_BRANCHES, MOCK_REVIEWS } from "@/lib/mock-data";
+import type { AllPlatformDataResponse } from "@/lib/wordpress";
 
-export function GlobalStructuredData() {
+export function GlobalStructuredData({catalog}:{catalog:AllPlatformDataResponse}) {
+  const office = contactDetails(catalog.settings);
   const organizationData = {
     "@type": "EducationalOrganization",
     "@id": "https://seeyamtechnologies.com/#organization",
     "name": "Seeyam Technologies",
     "alternateName": ["Seeyam Tech", "Seeyam IT Training & Placement Institute"],
     "url": "https://seeyamtechnologies.com",
-    "logo": "https://seeyamtechnologies.com/logo.png",
+    "logo": "https://seeyamtechnologies.com/seeyam-lion.png",
     "description": "Premier IT Training, Certification & 100% Placement Institute offering industry-grade Full Stack, Cloud DevOps, AI & Data Science, and Software Testing programs.",
-    "telephone": "+91-9840012345",
-    "email": "admissions@seeyamtechnologies.com",
+    "telephone": office.phone,
+    "email": office.email,
     "sameAs": [
       "https://www.linkedin.com/company/seeyam-technologies",
       "https://www.youtube.com/@seeyamtechnologies",
@@ -20,10 +22,10 @@ export function GlobalStructuredData() {
     ],
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "OMR IT Corridor, Sholinganallur",
+      "streetAddress": catalog.settings.contact_address || SEEYAM_CONTACT.streetAddress,
       "addressLocality": "Chennai",
       "addressRegion": "Tamil Nadu",
-      "postalCode": "600119",
+      "postalCode": SEEYAM_CONTACT.postalCode,
       "addressCountry": "IN"
     },
     "aggregateRating": {
@@ -35,8 +37,8 @@ export function GlobalStructuredData() {
     }
   };
 
-  const courseDataList = MOCK_COURSES.map((course) => {
-    const courseReviews = MOCK_REVIEWS.filter(
+  const courseDataList = catalog.courses.map((course) => {
+    const courseReviews = catalog.reviews.filter(
       (r) => r.courseId === course.id && r.status === "APPROVED"
     );
 
@@ -93,7 +95,7 @@ export function GlobalStructuredData() {
     };
   });
 
-  const branchDataList = MOCK_BRANCHES.map((branch) => ({
+  const branchDataList = catalog.branches.map((branch) => ({
     "@type": "EducationalOrganization",
     "@id": `https://seeyamtechnologies.com/#branch-${branch.slug}`,
     "name": `Seeyam Technologies - ${branch.name}`,
@@ -128,7 +130,7 @@ export function GlobalStructuredData() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataGraph) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataGraph).replace(/</g,"\\u003c") }}
     />
   );
 }
@@ -154,7 +156,7 @@ export function FAQSchema({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g,"\\u003c") }}
     />
   );
 }
@@ -221,7 +223,7 @@ export function CourseDetailSchema({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g,"\\u003c") }}
     />
   );
 }

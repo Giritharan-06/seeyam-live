@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import {
   Calendar,
   Clock,
-  Sparkles,
+  CircleDot,
   ChevronRight,
   Home,
   BookOpen,
@@ -97,7 +97,7 @@ export default async function WordPressDynamicPage({ params }: PageProps) {
 
           {/* Badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30 mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <CircleDot className="w-3.5 h-3.5 text-amber-400" />
             <span>Data Analytics & Digital Marketing</span>
           </div>
 

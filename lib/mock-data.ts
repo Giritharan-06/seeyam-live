@@ -13,6 +13,8 @@ export interface SyllabusModule {
 }
 
 export interface CourseData {
+  image?: string;
+  languages?: string[];
   id: string;
   title: string;
   slug: string;
@@ -105,6 +107,7 @@ export interface BatchData {
 }
 
 export interface PlacementStoryData {
+  placementDate?: string;
   id: string;
   studentName: string;
   companyName: string;
@@ -142,6 +145,7 @@ export interface LeadData {
 }
 
 export interface ReviewData {
+  photo?: string;
   id: string;
   studentName: string;
   studentEmail: string;

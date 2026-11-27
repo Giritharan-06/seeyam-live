@@ -8,7 +8,7 @@ import {
   TrendingUp,
   UserPlus,
   ArrowRight,
-  Sparkles,
+  CircleDot,
   Phone,
   Mail,
   MapPin,
@@ -29,6 +29,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useCatalogOptions } from "@/components/admin/CatalogOptions";
+import OperationsOverview from "@/components/admin/OperationsOverview";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { getDashboardStats, getLeads, createWalkInLead } from "@/actions/leads";
 import { getUpcomingBatches, createBatch } from "@/actions/batches";
@@ -191,13 +192,14 @@ export default function AdminDashboardPage() {
       />
 
       <main className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
+        <OperationsOverview />
         {/* Welcome Top Banner */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden" data-card-3d="settings" data-card-density="compact">
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-1.5 z-10">
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-bold uppercase tracking-wider">
-              <Sparkles className="w-4 h-4" />
+              <CircleDot className="w-4 h-4" />
               <span>Seeyam Technologies CRM • Executive Command Center</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">

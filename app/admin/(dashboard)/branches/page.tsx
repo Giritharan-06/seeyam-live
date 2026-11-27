@@ -16,7 +16,7 @@ import {
   X,
   Edit2,
   Trash2,
-  Sparkles,
+  CircleDot,
   Navigation,
 } from "lucide-react";
 import DeleteRecordDialog from "@/components/admin/DeleteRecordDialog";

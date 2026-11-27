@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   Building2,
-  Sparkles,
+  CircleDot,
   ArrowRight,
   Award,
   Users,
@@ -285,7 +285,7 @@ export default function OurStudentsPlacedAt() {
         <ScrollReveal direction="up">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3 shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-500 animate-spin" />
               <span>{siteSettings?.hiring_network_title || "OUR STUDENTS PLACED AT"}</span>
             </div>
             

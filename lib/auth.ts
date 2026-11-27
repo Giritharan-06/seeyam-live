@@ -18,29 +18,29 @@ export interface SessionUser {
 }
 
 const SESSION_COOKIE_NAME = "seeyam_admin_session";
+const PRIMARY_ADMIN_ID = "usr-admin-1";
+const PRIMARY_ADMIN_NAME = "SEEYAM";
 export const hasSecureAdminConfiguration = Boolean(
   process.env.SESSION_SECRET && process.env.SESSION_SECRET.length >= 32 &&
   process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD.length >= 12
 );
-const SESSION_SECRET = process.env.SESSION_SECRET || "seeyam-technologies-crm-secure-session-key-2025";
+const SESSION_SECRET = process.env.SESSION_SECRET || "";
 
-// Static credentials for quick development / fallback
+// Environment-managed staff accounts.
 const DEFAULT_USERS: Array<SessionUser & { passwordHash: string }> = [
   {
-    id: "usr-admin-1",
+    id: PRIMARY_ADMIN_ID,
     email: process.env.ADMIN_EMAIL?.trim() || "admin@seeyam.com",
-    name: "Dr. Arvind Sundaram (Director)",
+    name: PRIMARY_ADMIN_NAME,
     role: "ADMIN",
-    // SHA256 of "admin123"
-    passwordHash: hashPassword(process.env.ADMIN_PASSWORD || "admin123"),
+    passwordHash: hashPassword(process.env.ADMIN_PASSWORD || ""),
   },
   {
     id: "usr-counselor-1",
     email: "counselor@seeyam.com",
     name: "Priya Sharma (Senior Counselor)",
     role: "COUNSELOR",
-    // SHA256 of "counselor123"
-    passwordHash: hashPassword(process.env.COUNSELOR_PASSWORD || "counselor123"),
+    passwordHash: hashPassword(process.env.COUNSELOR_PASSWORD || ""),
   },
 ];
 
@@ -49,6 +49,7 @@ export function hashPassword(password: string): string {
 }
 
 export function signToken(payload: SessionUser, maxAgeSeconds: number = 86400 * 7): string {
+  if (!hasSecureAdminConfiguration) throw new Error("Staff sign-in is not configured.");
   const expiresAt = Date.now() + maxAgeSeconds * 1000;
   const data = JSON.stringify({ ...payload, exp: expiresAt });
   const base64Data = Buffer.from(data).toString("base64url");
@@ -61,7 +62,7 @@ export function signToken(payload: SessionUser, maxAgeSeconds: number = 86400 * 
 
 export function verifyToken(token: string): SessionUser | null {
   try {
-    if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) return null;
+    if (!hasSecureAdminConfiguration) return null;
     const [base64Data, signature] = token.split(".");
     if (!base64Data || !signature) return null;
 
@@ -114,6 +115,9 @@ export async function getSession(): Promise<SessionUser | null> {
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     if (!token) return null;
     const user = verifyToken(token);
+    if (user?.role === "ADMIN" && user.id === PRIMARY_ADMIN_ID) {
+      return { ...user, name: PRIMARY_ADMIN_NAME };
+    }
     if (user?.role === "COUNSELOR" && user.id !== "usr-counselor-1") {
       const current = await prisma.user.findUnique({ where: { id: user.id } });
       if (!current?.active || current.role !== "COUNSELOR" || current.updatedAt.toISOString() !== user.version) return null;
@@ -130,12 +134,12 @@ export async function destroySession() {
 }
 
 export async function authenticateUser(email: string, password: string): Promise<SessionUser | null> {
-  if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) return null;
+  if (!hasSecureAdminConfiguration) return null;
   const normalizedEmail = email.trim().toLowerCase();
   const passwordHash = hashPassword(password);
 
   const found = DEFAULT_USERS.find(
-    (u) => (process.env.NODE_ENV !== "production" || u.role === "ADMIN" || Boolean(process.env.COUNSELOR_PASSWORD)) &&
+    (u) => (u.role === "ADMIN" || Boolean(process.env.COUNSELOR_PASSWORD)) &&
       u.email.toLowerCase() === normalizedEmail
   );
 

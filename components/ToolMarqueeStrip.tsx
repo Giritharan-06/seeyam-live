@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { CircleDot, ArrowUpRight } from "lucide-react";
 
 export default function ToolMarqueeStrip() {
   const tools = [

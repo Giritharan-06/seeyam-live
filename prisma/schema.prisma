@@ -278,3 +278,58 @@ model Review {
   updatedAt DateTime @updatedAt
   @@map("reviews")
 }
+
+model CmsDocument {
+  kind String
+  id String
+  draft Json
+  previousSeo Json? @map("previous_seo")
+  published Json?
+  withdrawn Boolean @default(false)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  history CmsHistory[]
+  media CmsMediaUsage[]
+  @@id([kind,id])
+  @@map("cms_documents")
+}
+
+model CmsHistory {
+  eventId BigInt @id @default(autoincrement()) @map("event_id")
+  kind String
+  id String
+  version Int
+  action String
+  actorId String @map("actor_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  document CmsDocument @relation(fields:[kind,id], references:[kind,id],onDelete:NoAction,onUpdate:NoAction)
+  @@unique([kind,id,version])
+  @@map("cms_history")
+}
+
+model CmsMedia {
+  id String @id @db.Uuid
+  name String
+  category String @default("")
+  mime String
+  size Int
+  provider String
+  deleting Boolean @default(false)
+  storageKey String @unique @map("storage_key")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  usage CmsMediaUsage[]
+  @@map("cms_media")
+}
+
+model CmsMediaUsage {
+  kind String
+  id String
+  mediaId String @map("media_id") @db.Uuid
+  stage String
+  document CmsDocument @relation(fields:[kind,id],references:[kind,id],onDelete:NoAction,onUpdate:NoAction)
+  media CmsMedia @relation(fields:[mediaId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@id([kind,id,mediaId,stage])
+  @@index([mediaId,stage],map:"cms_media_lookup")
+  @@map("cms_media_usage")
+}

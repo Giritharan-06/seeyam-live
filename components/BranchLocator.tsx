@@ -11,7 +11,7 @@ import {
   ExternalLink,
   ChevronDown,
   Building,
-  Sparkles,
+  CircleDot,
   ArrowRight,
 } from "lucide-react";
 import { MOCK_BRANCHES, BranchData } from "@/lib/mock-data";

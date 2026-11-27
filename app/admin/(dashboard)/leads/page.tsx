@@ -15,7 +15,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
+  CircleDot,
   CheckCircle2,
   Calendar,
   Layers,

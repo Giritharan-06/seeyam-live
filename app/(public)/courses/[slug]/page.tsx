@@ -1,3 +1,4 @@
+import { courseArtworkUrl } from "@/lib/redesign-art";
 import PageStructuredData from "@/components/PageStructuredData";
 import { withPageSeo } from "@/lib/seo";
 import React from "react";
@@ -17,7 +18,7 @@ import {
   ArrowRight,
   ShieldCheck,
   ChevronRight,
-  Sparkles,
+  CircleDot,
   Phone,
   MessageSquare,
   HelpCircle,
@@ -27,7 +28,8 @@ import {
   FileText,
 } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
-import { publicCatalog as db } from "@/lib/public-catalog";
+import { contactDetails, phoneHref, whatsappHref } from "@/lib/contact";
+import { getCatalog, publicCatalog as db } from "@/lib/public-catalog";
 import {
   MOCK_COURSES,
   MOCK_CATEGORIES,
@@ -136,6 +138,8 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
     roleFilter = "digital-marketer";
   }
 
+  const office = contactDetails((await getCatalog()).settings);
+
   // Calculate monthly EMI approximation (6 months zero interest)
   const emiPerMonth = Math.round(course.price / 6);
 
@@ -159,7 +163,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
       </div>
 
       {/* Course Hero Banner (Deep Navy Theme from Eduma) */}
-      <section className="bg-[#071938] text-white py-14 relative overflow-hidden border-b border-[#0f2956]">
+      <section className="public-banner public-banner--courses bg-[#071938] text-white py-14 relative overflow-hidden border-b border-[#0f2956]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -234,6 +238,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
             {/* Right: Action Card */}
             <div className="lg:col-span-4 bg-white text-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4" data-card-3d="analytics" data-card-density="regular">
+              <img src={course.image || courseArtworkUrl(course.slug) || "/images/card-photos/analytics-screen.jpg"} alt="" width={480} height={200} className="aspect-[12/5] w-full rounded-xl object-cover" />
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
                   <div className="text-[10px] text-slate-400 uppercase font-bold">
@@ -297,7 +302,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
           <section className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6" data-card-3d="analytics" data-card-density="regular">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-extrabold text-[#071938] flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-500" />
+                <CircleDot className="w-5 h-5 text-amber-500" />
                 <span>Program Highlights & Tools</span>
               </h2>
             </div>
@@ -348,7 +353,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
             <UpcomingBatches
               courseId={course.id}
               title={`Upcoming Batches for ${course.title}`}
-              subtitle="Select your preferred branch in Chennai, Bangalore, or Hyderabad to reserve your seat before it fills."
+              subtitle="Ask about upcoming classroom or online batches."
             />
           </div>
 
@@ -440,17 +445,15 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
             <div className="space-y-2 pt-2">
               <a
-                href="tel:+918939915577"
+                href={phoneHref(office.phone)}
                 className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-extrabold text-xs shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-105"
               >
                 <Phone className="w-4 h-4" />
-                <span>Call Admissions: +91 89399 15577</span>
+                <span>Call admissions {office.phone}</span>
               </a>
 
               <a
-                href={`https://wa.me/918939915577?text=Hi%20Seeyam%20Technologies,%20I%20am%20interested%20in%20the%20${encodeURIComponent(
-                  course.title
-                )}%20course.`}
+                href={whatsappHref(office.whatsapp, "Hi SEEYAM, I’m interested in " + course.title + ".")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-2.5 rounded-2xl bg-[#0e2a5c] hover:bg-[#163d7e] text-slate-200 font-bold text-xs border border-[#1d4282] flex items-center justify-center gap-2 transition-colors"

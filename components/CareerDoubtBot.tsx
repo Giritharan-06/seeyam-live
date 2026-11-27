@@ -2,11 +2,12 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import {
   MessageSquare,
   X,
   Send,
-  Sparkles,
+  CircleDot,
   Bot,
   User,
   GraduationCap,
@@ -21,6 +22,8 @@ import {
   ExternalLink,
   ChevronRight,
 } from "lucide-react";
+import { contactDetails, whatsappHref } from "@/lib/contact";
+import { usePlatformData } from "@/components/PlatformDataContext";
 import { useLeadModal } from "@/components/LeadModalContext";
 
 interface ChatMessage {
@@ -166,6 +169,8 @@ const PRELOADED_DOUBTS: PreloadedDoubt[] = [
 ];
 
 export default function CareerDoubtBot() {
+  const { siteSettings } = usePlatformData();
+  const { whatsapp } = contactDetails(siteSettings);
   const { openLeadModal } = useLeadModal();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -190,6 +195,8 @@ export default function CareerDoubtBot() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const widgetRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -200,9 +207,25 @@ export default function CareerDoubtBot() {
 
   // Focus input when opened
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 250);
+    if (!isOpen) return;
+    const focusTimer = window.setTimeout(() => {
+      if (window.matchMedia("(pointer: fine)").matches) inputRef.current?.focus();
+    }, 200);
+    function dismissOutside(event: PointerEvent) {
+      if (event.target instanceof Node && !widgetRef.current?.contains(event.target)) setIsOpen(false);
     }
+    function dismissWithEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setIsOpen(false);
+      triggerRef.current?.focus();
+    }
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("keydown", dismissWithEscape);
+    return () => {
+      window.clearTimeout(focusTimer);
+      document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("keydown", dismissWithEscape);
+    };
   }, [isOpen]);
 
   const findBestAnswer = (query: string): PreloadedDoubt | null => {
@@ -275,7 +298,7 @@ export default function CareerDoubtBot() {
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           actions: [
             { label: "Book Free Demo Session", actionType: "lead_demo" },
-            { label: "Chat on WhatsApp (+91 89399 15577)", actionType: "whatsapp" },
+            { label: "Chat on WhatsApp", actionType: "whatsapp" },
           ],
           suggestedFollowUps: [
             "Can I learn with a non-IT background?",
@@ -300,7 +323,7 @@ export default function CareerDoubtBot() {
       setIsOpen(false);
     } else if (action.actionType === "whatsapp") {
       window.open(
-        "https://wa.me/918939915577?text=Hi%20Seeyam%20team,%20I%20have%20a%20question%20regarding%20courses%20and%20career%20guidance.",
+        whatsappHref(whatsapp, "Hi SEEYAM, I have a question about your courses."),
         "_blank"
       );
     }
@@ -326,10 +349,10 @@ export default function CareerDoubtBot() {
   return (
     <>
       {/* Floating Widget Container in Bottom-Right */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 flex flex-col items-end">
+      <div ref={widgetRef} className="fixed bottom-3 right-3 z-30 flex flex-col items-end sm:bottom-5 sm:right-5">
         {/* Chat Window Modal */}
         {isOpen && (
-          <div className="w-[92vw] sm:w-[390px] h-[540px] max-h-[82vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden mb-3 animate-scale-in">
+          <div id="doubt-chat" role="region" aria-label="Ask a Doubt chat" data-enquiry-blocking-overlay className="mb-2 flex h-[min(52dvh,25rem)] w-[min(calc(100vw-2rem),20rem)] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-2xl lg:h-[min(60dvh,29rem)] lg:w-[min(32vw,23rem)]">
             {/* Header */}
             <div className="bg-[#071938] text-white p-4 border-b border-[#0f2956] flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
@@ -342,7 +365,7 @@ export default function CareerDoubtBot() {
                 <div>
                   <h3 className="font-extrabold text-sm text-white flex items-center gap-1.5 leading-snug">
                     <span>Seeyam Career & Doubt Bot</span>
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <CircleDot className="w-3.5 h-3.5 text-amber-400" />
                   </h3>
                   <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -507,7 +530,7 @@ export default function CareerDoubtBot() {
                   type="button"
                   onClick={() =>
                     window.open(
-                      "https://wa.me/918939915577?text=Hi%20Seeyam%20team,%20I%20have%20a%20doubt%20and%20want%20to%20chat%20on%20WhatsApp.",
+                      whatsappHref(whatsapp, "Hi SEEYAM, I have a question about your courses."),
                       "_blank"
                     )
                   }
@@ -522,6 +545,16 @@ export default function CareerDoubtBot() {
         )}
 
         {/* Main Floating Trigger Button */}
+        <a
+          href={whatsappHref(whatsapp, "Hi SEEYAM, I have a question about your courses.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with SEEYAM on WhatsApp"
+          title="Chat on WhatsApp"
+          className="mb-2 grid h-11 w-11 place-items-center rounded-full bg-[#087c55] text-white shadow-lg transition-colors hover:bg-[#056246] sm:h-12 sm:w-12"
+        >
+          <WhatsAppIcon className="h-6 w-6" />
+        </a>
         <div className="flex items-center gap-2">
           {/* Quick subtle badge when closed */}
           {!isOpen && (
@@ -529,16 +562,19 @@ export default function CareerDoubtBot() {
               onClick={() => setIsOpen(true)}
               className="hidden sm:flex bg-white/95 backdrop-blur-md border border-slate-200 text-[#071938] px-3.5 py-2 rounded-full shadow-lg text-xs font-bold hover:scale-105 transition-all items-center gap-1.5 cursor-pointer animate-fade-in"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-500" />
               <span>Ask a Doubt</span>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             </button>
           )}
 
           <button
+            ref={triggerRef}
             onClick={() => setIsOpen(!isOpen)}
-            className="w-14 h-14 rounded-full bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-700 text-white shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center relative cursor-pointer group"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-700 text-white shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center relative cursor-pointer group"
             aria-label={isOpen ? "Close doubt bot" : "Open doubt bot"}
+            aria-expanded={isOpen}
+            aria-controls={isOpen ? "doubt-chat" : undefined}
           >
             {isOpen ? (
               <X className="w-6 h-6" />

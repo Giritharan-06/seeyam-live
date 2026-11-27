@@ -1,9 +1,11 @@
 import { db, prisma } from "./db";
 import type { AllPlatformDataResponse } from "./wordpress";
-import { getSiteSettings } from "./wordpress";
+import { publishedItems } from "./cms/store";
+import { applyContent } from "./cms/public";
+import { getFallbackPlatformData, getSiteSettings } from "./wordpress";
 import type { FAQData } from "./mock-data";
 
-export async function getPublishedPlatform(): Promise<AllPlatformDataResponse> {
+export async function getBasePlatform(): Promise<AllPlatformDataResponse> {
   const [
     categories,
     courses,
@@ -84,4 +86,9 @@ export async function getPublishedPlatform(): Promise<AllPlatformDataResponse> {
       hero_video_badge: hero.badge,
     },
   };
+}
+
+export async function getPublishedPlatform(): Promise<AllPlatformDataResponse> {
+  const [base, items] = await Promise.all([getBasePlatform().catch(() => ({...getFallbackPlatformData(),courses:[],reviews:[],placements:[],batches:[],branches:[]})), publishedItems()]);
+  return applyContent(base,items);
 }

@@ -36,6 +36,7 @@
     ".next-dev/types/**/*.ts"
   ],
   "exclude": [
+    "demo/cms-test-runtime",
     "node_modules"
   ]
 }

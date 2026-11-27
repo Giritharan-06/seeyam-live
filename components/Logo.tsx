@@ -19,27 +19,28 @@ export default function Logo({
   const { siteSettings } = usePlatformData();
 
   const brand1 = siteSettings?.brand_name_1 || "SEEYAM";
-  const brand2 = siteSettings?.brand_name_2 || "TECHNOLOGIES";
   const tagline = siteSettings?.brand_tagline || "IT Training • Certification • Placement";
 
   const sizeDimensions = {
     sm: { box: "h-8 w-11" },
     md: { box: "h-10 w-14" },
     lg: { box: "h-12 w-16" },
-    xl: { box: "h-16 w-22" },
+    xl: { box: "h-16 w-20" },
   };
 
   const { box } = sizeDimensions[size];
 
   return (
     <div className={`inline-flex items-center gap-2 ${className}`}>
-      {/* Brand Lion Tech Book Emblem Image */}
+      {/* SEEYAM lion mark */}
       <div
-        className={`${box} rounded-xl bg-white p-0.5 shadow-sm flex items-center justify-center shrink-0 border border-slate-200/80 overflow-hidden group-hover:scale-105 transition-transform`}
+        className={`seeyam-mark ${box} p-0.5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}
       >
         <img
-          src="/logo.png"
-          alt={`${brand1} ${brand2} Logo`}
+          src="/seeyam-lion.png"
+          width={512}
+          height={512}
+          alt={showText ? "" : brand1}
           className="w-full h-full object-contain"
         />
       </div>
@@ -48,18 +49,15 @@ export default function Logo({
         <div className="leading-tight">
           <div className="flex items-center gap-1.5">
             <span
-              className={`font-black ${size === "sm" ? "text-xs sm:text-sm" : "text-sm sm:text-lg"} tracking-tight ${
+              className={`seeyam-wordmark font-black ${size === "sm" ? "text-xs sm:text-sm" : "text-sm sm:text-lg"} tracking-tight ${
                 lightText ? "text-white" : "text-[#071938]"
               }`}
             >
               {brand1}
             </span>
-            <span className={`font-black ${size === "sm" ? "text-xs sm:text-sm" : "text-sm sm:text-lg"} tracking-tight text-blue-600`}>
-              {brand2}
-            </span>
           </div>
           <div
-            className={`hidden sm:block text-[8px] sm:text-[9.5px] font-bold tracking-wider uppercase ${
+            className={`seeyam-tagline hidden sm:block text-[8px] sm:text-[9.5px] font-bold tracking-wider uppercase ${
               lightText ? "text-slate-400" : "text-slate-500"
             }`}
           >

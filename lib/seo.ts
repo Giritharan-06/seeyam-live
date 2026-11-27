@@ -6,21 +6,25 @@ import { getAllPages } from "./wordpress";
 import { publicCatalog } from "./public-catalog";
 import { BLOG_POSTS } from "./blog-data";
 import { decodeHtml } from "./utils";
+import { chennaiCourses } from "./chennai-courses";
 
 export const siteOrigin = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://seeyamtechnologies.com").origin;
 export const absoluteUrl = (path: string) => new URL(path, siteOrigin).href;
 
 const staticTargets: SeoTarget[] = [
   { path: "/", title: "Seeyam Technologies | Premier Data Analytics, Digital Marketing & Placement Institute", description: "Learn Data Analytics, Power BI, SQL, Python and Digital Marketing through practical projects and mentor guidance." },
+  { path: "/gallery", title: "Training gallery | Seeyam Technologies", description: "Browse photos from Seeyam training and campus events." },
+  { path: "/trainers", title: "Our trainers | Seeyam Technologies", description: "Meet the instructors teaching at Seeyam." },
   { path: "/about", title: "About Seeyam Technologies", description: "Meet Seeyam Technologies and learn about our approach to IT training and career support." },
   { path: "/courses", title: "IT Training Courses at Seeyam Technologies", description: "Compare Data Analytics, Business Intelligence and Digital Marketing courses, schedules and learning formats." },
   { path: "/placements", title: "Placement Support and Student Careers", description: "Explore student career stories, interview preparation and placement support at Seeyam Technologies." },
-  { path: "/branches", title: "Seeyam Technologies Training Campuses", description: "Find training campuses in Chennai, Bangalore and Hyderabad and get directions." },
+  { path: "/branches", title: "SEEYAM Training Campus in Thoraipakkam", description: "Find SEEYAM’s Thoraipakkam training campus in Chennai, get directions and contact admissions." },
   { path: "/reviews", title: "Student Reviews of Seeyam Technologies", description: "Read about students’ experiences with training, mentoring and career preparation." },
   { path: "/blog", title: "IT Training and Career Insights", description: "Read Seeyam Technologies articles on analytics, marketing, technology and career development." },
   { path: "/resources", title: "Free IT Training Resources", description: "Find study materials, resume templates and interview practice resources." },
   { path: "/resources/sql-compiler", title: "Online SQL Practice Compiler", description: "Practise SQL queries in an interactive browser workspace." },
   { path: "/contact", title: "Contact Seeyam Technologies", description: "Ask about courses, upcoming batches and campus visits." },
+  ...Object.values(chennaiCourses).map(({ path, title, description }) => ({ path, title, description })),
 ].map(target => ({ ...target, kind: "page" }));
 
 export async function getSeoTargets(): Promise<SeoTarget[]> {
@@ -53,7 +57,11 @@ export async function getPageSeo(path: string) {
 export async function getStaticSeoMetadata(path: string) {
   const target = staticTargets.find(page => page.path === path);
   if (!target) throw new Error("Missing SEO defaults for " + path);
-  return withPageSeo(path, target);
+  const guide = Object.values(chennaiCourses).find(course => course.path === path);
+  return withPageSeo(path, target, guide ? {
+    keywords: [...guide.keywords],
+    openGraph: { images: [{ url: absoluteUrl(guide.image) }] },
+  } : undefined);
 }
 
 export async function withPageSeo(path: string, defaults: { title: string; description: string }, base: Metadata = {}): Promise<Metadata> {

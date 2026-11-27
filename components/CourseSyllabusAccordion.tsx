@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import {
   BookOpen,
   ChevronDown,
@@ -9,7 +9,7 @@ import {
   FileText,
   CheckCircle2,
   Layers,
-  Sparkles,
+  CircleDot,
 } from "lucide-react";
 import { SyllabusModule } from "@/lib/mock-data";
 import { useLeadModal } from "@/components/LeadModalContext";
@@ -28,6 +28,7 @@ export default function CourseSyllabusAccordion({
   syllabus,
 }: CourseSyllabusAccordionProps) {
   const { openLeadModal } = useLeadModal();
+  const accordionId = useId();
   // By default, open the first module, keep others collapsed
   const [openModules, setOpenModules] = useState<Record<number, boolean>>({ 0: true });
 
@@ -53,7 +54,7 @@ export default function CourseSyllabusAccordion({
   };
 
   return (
-    <section className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6" data-card-3d="learning" data-card-density="regular">
+    <section id="syllabus" className="scroll-mt-28 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6" data-card-3d="learning" data-card-density="regular">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-100">
         <div>
@@ -82,7 +83,7 @@ export default function CourseSyllabusAccordion({
       {/* Accordion Controls */}
       <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
         <span className="font-semibold text-slate-700">
-          {syllabus.length} Learning Modules • 40+ Practical Labs
+          {syllabus.length} learning modules
         </span>
         <div className="flex items-center gap-3 font-semibold">
           <button
@@ -114,6 +115,8 @@ export default function CourseSyllabusAccordion({
               <button
                 type="button"
                 onClick={() => toggleModule(idx)}
+                aria-expanded={isOpen}
+                aria-controls={`${accordionId}-${idx}`}
                 className="w-full p-4 sm:p-5 flex items-center justify-between bg-white hover:bg-slate-50 text-left transition-colors"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
@@ -129,9 +132,9 @@ export default function CourseSyllabusAccordion({
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold hidden sm:inline-block">
+                  {mod.duration && <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold hidden sm:inline-block">
                     {mod.duration}
-                  </span>
+                  </span>}
                   <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
@@ -139,8 +142,7 @@ export default function CourseSyllabusAccordion({
               </button>
 
               {/* Collapsible Content */}
-              {isOpen && (
-                <div className="p-4 sm:p-6 border-t border-slate-100 bg-[#F8FAFD] animate-fade-in">
+                <div id={`${accordionId}-${idx}`} hidden={!isOpen} className="p-4 sm:p-6 border-t border-slate-100 bg-[#F8FAFD]">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {mod.topics.map((topic, tIdx) => (
                       <div
@@ -153,7 +155,6 @@ export default function CourseSyllabusAccordion({
                     ))}
                   </div>
                 </div>
-              )}
             </div>
           );
         })}
@@ -166,10 +167,7 @@ export default function CourseSyllabusAccordion({
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-extrabold text-[#071938]">Want the full 24-page syllabus brochure?</p>
-            <p className="text-slate-500 text-[11px]">
-              Includes week-by-week timetable, real company project architecture, and tool licenses.
-            </p>
+            <p className="font-extrabold text-[#071938]">Need a copy of the syllabus?</p>
           </div>
         </div>
 

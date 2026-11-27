@@ -1,0 +1,83 @@
+.admin-workspace {
+  --admin-ink: #14243d;
+  --admin-line: #dce5ef;
+  --admin-accent: #4545aa;
+  background: radial-gradient(ellipse at 90% 0%, #ede7ff 0%, transparent 47%),
+    radial-gradient(ellipse at 5% 100%, #dff7ee 0%, transparent 50%), #f4f7fc;
+  color: var(--admin-ink);
+}
+
+.admin-workspace > aside {
+  background: linear-gradient(172deg, #222055, #102037 65%, #103933);
+  border-color: #ffffff21;
+}
+
+.admin-workspace > aside a[aria-current="page"] {
+  background: linear-gradient(110deg, #5a40c5, #404dba);
+  color: white;
+  box-shadow: inset 3px 0 #b8adff;
+}
+
+.admin-main > header {
+  border-bottom: 1px solid #ded9f3;
+  background: #fffefef2;
+  backdrop-filter: blur(12px);
+}
+
+.admin-main main {
+  padding-top: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.admin-main main h1 {
+  color: var(--admin-ink);
+  font-size: clamp(1.65rem, 4vw, 2.5rem);
+  letter-spacing: -.045em;
+  line-height: 1.13;
+}
+
+.admin-main :is(main, [role="dialog"]) :is(button, select, input, textarea, a) {
+  transition: background-color 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease, color 160ms ease, translate 160ms ease;
+}
+
+.admin-main :is(button, select, input, textarea, a):focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 3px;
+}
+
+.admin-main main :is(select, input:not([type="checkbox"]):not([type="radio"]), textarea) {
+  border-color: #c8d4e5;
+}
+
+.admin-main main :is(select, input[placeholder], textarea):hover {
+  border-color: #8d88c8;
+}
+
+.admin-main main table thead {
+  background: #ecebfb;
+  color: #373371;
+}
+
+.admin-main main table tbody tr:hover { background-color: #f5f6ff; }
+.admin-main main :is(section, form, article).bg-white {
+  border-color: var(--admin-line);
+  box-shadow: 0 6px 18px #2538660c;
+}
+
+.admin-main main :is(button, a).bg-blue-700:not(:disabled) {
+  background-color: #4944ad;
+}
+
+.admin-main main :is(button, a).bg-blue-700:not(:disabled):hover { background-color: #39338e; }
+.admin-main main button:disabled { cursor: not-allowed; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .admin-main main { animation: admin-arrive 240ms ease-out backwards; }
+  .admin-main [data-admin-popover], .admin-main dialog[open] { animation: admin-arrive 180ms ease-out backwards; }
+  .admin-main main :is(button, a).bg-blue-700:not(:disabled):hover { translate: 0 -1px; }
+  .admin-workspace > aside a { transition: background-color 160ms ease, color 160ms ease; }
+  @keyframes admin-arrive {
+    from { opacity: 0; translate: 0 6px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+}

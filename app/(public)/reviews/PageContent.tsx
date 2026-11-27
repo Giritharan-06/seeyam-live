@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Star,
-  Sparkles,
+  CircleDot,
   CheckCircle2,
   MessageSquarePlus,
   Building2,
@@ -16,18 +16,13 @@ import {
   ThumbsUp,
   Award,
 } from "lucide-react";
-import { ReviewData, MOCK_REVIEWS } from "@/lib/mock-data";
-import { getApprovedReviews } from "@/actions/reviews";
 import ReviewModal from "@/components/ReviewModal";
 import { usePlatformData } from "@/components/PlatformDataContext";
 import CounterNumber from "@/components/CounterNumber";
 import { decodeHtml } from "@/lib/utils";
 
 export default function StudentReviewsPage() {
-  const { courses, branches } = usePlatformData();
-  const [reviews, setReviews] = useState<ReviewData[]>(
-    MOCK_REVIEWS.filter((r) => r.status === "APPROVED")
-  );
+  const { courses, branches, reviews, refreshData } = usePlatformData();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [expandedReviewId, setExpandedReviewId] = useState<string | null>(null);
 
@@ -36,21 +31,6 @@ export default function StudentReviewsPage() {
   const [selectedBranchFilter, setSelectedBranchFilter] = useState<string>("ALL");
   const [selectedRatingFilter, setSelectedRatingFilter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
-
-  const fetchReviews = async () => {
-    try {
-      const data = await getApprovedReviews();
-      if (data && data.length > 0) {
-        setReviews(data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchReviews();
-  }, []);
 
   // Filtered List
   const filteredReviews = reviews.filter((rev) => {
@@ -93,11 +73,11 @@ export default function StudentReviewsPage() {
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-20">
       {/* Header Banner (Eduma Deep Navy Header) */}
-      <section className="bg-[#071938] text-white py-16 border-b border-[#0f2956]">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-16 border-b border-[#0f2956]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-400" />
               <span>Verified Alumni Feedback & Ratings</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
@@ -108,6 +88,7 @@ export default function StudentReviewsPage() {
             </p>
           </div>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/study-space.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* Scorecard Strip with Count Animation */}
@@ -131,7 +112,7 @@ export default function StudentReviewsPage() {
               </div>
             </div>
             <p className="text-xs text-slate-600 font-medium">
-              Based on <strong><CounterNumber value="2,480+" duration={2000} /></strong> verified reviews across Chennai, Bangalore & Hyderabad campuses.
+              Based on <strong><CounterNumber value="2,480+" duration={2000} /></strong> verified reviews from our learners.
             </p>
             <div className="inline-flex items-center gap-1 text-[11px] text-blue-700 font-bold bg-blue-50 px-2.5 py-1 rounded-full">
               <CheckCircle2 className="w-3 h-3 text-blue-600" />
@@ -283,7 +264,7 @@ export default function StudentReviewsPage() {
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shadow-xs">
-                          {review.studentName.charAt(0)}
+                          {review.photo ? <img src={review.photo} alt="" loading="lazy" className="h-full w-full rounded-xl object-cover"/> : review.studentName.charAt(0)}
                         </div>
                         <div>
                           <h4 className="font-bold text-sm text-[#071938]">
@@ -370,7 +351,7 @@ export default function StudentReviewsPage() {
       <ReviewModal
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
-        onReviewSubmitted={fetchReviews}
+        onReviewSubmitted={refreshData}
       />
     </div>
   );

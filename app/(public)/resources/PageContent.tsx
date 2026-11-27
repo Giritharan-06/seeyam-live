@@ -7,7 +7,7 @@ import {
   Download,
   Terminal,
   Search,
-  Sparkles,
+  CircleDot,
   HelpCircle,
   ChevronDown,
   ChevronUp,
@@ -65,14 +65,14 @@ export default function ResourcesPage() {
   return (
     <div className="bg-[#F8FAFD] min-h-screen pb-24">
       {/* Hero Header */}
-      <section className="bg-[#071938] text-white py-16 border-b border-[#0f2956] relative overflow-hidden">
+      <section className="public-banner public-banner--with-photo bg-[#071938] text-white py-16 border-b border-[#0f2956] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30 mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <CircleDot className="w-3.5 h-3.5 text-amber-400" />
               <span>100% Free Career & Technical Prep Hub</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
@@ -108,6 +108,7 @@ export default function ResourcesPage() {
             </div>
           </div>
         </div>
+        <img className="public-banner-photo" src="/images/card-photos/resource-library.jpg" alt="" fetchPriority="high" />
       </section>
 
       {/* Featured Banner: Live SQL Playground */}

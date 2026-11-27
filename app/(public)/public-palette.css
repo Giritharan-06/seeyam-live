@@ -1,0 +1,430 @@
+/* Theme overrides for shared public components that still use legacy Tailwind color utilities. */
+
+.seeyam-public [class~="bg-amber-100"],
+.seeyam-public [class~="bg-amber-100/30"],
+.seeyam-public [class~="bg-amber-50"],
+.seeyam-public [class~="bg-blue-100"],
+.seeyam-public [class~="bg-blue-100/40"],
+.seeyam-public [class~="bg-blue-200/70"],
+.seeyam-public [class~="bg-blue-50"],
+.seeyam-public [class~="bg-blue-50/70"],
+.seeyam-public [class~="bg-blue-50/80"],
+.seeyam-public [class~="bg-emerald-50"],
+.seeyam-public [class~="bg-indigo-50"],
+.seeyam-public [class~="bg-orange-50"],
+.seeyam-public [class~="bg-rose-50"],
+.seeyam-public [class~="bg-sky-100"],
+.seeyam-public [class~="bg-teal-100"],
+.seeyam-public [class~="bg-teal-200/25"],
+.seeyam-public [class~="bg-violet-100"],
+.seeyam-public [class~="hover:bg-blue-100"]:hover,
+.seeyam-public [class~="hover:bg-blue-50"]:hover,
+.seeyam-public [class~="hover:bg-blue-50/30"]:hover,
+.seeyam-public [class~="hover:bg-blue-50/40"]:hover,
+.seeyam-public [class~="hover:bg-blue-50/50"]:hover,
+.seeyam-public [class~="hover:bg-blue-50/60"]:hover,
+.seeyam-public [class~="hover:bg-blue-50/70"]:hover { background-color: #fff2e8; }
+
+.seeyam-public .group:hover [class~="group-hover:text-blue-600"],
+.seeyam-public .group:hover [class~="group-hover:text-blue-800"],
+.seeyam-public .group:hover [class~="group-hover:text-emerald-700"],
+.seeyam-public [class~="hover:text-amber-700"]:hover,
+.seeyam-public [class~="hover:text-blue-600"]:hover,
+.seeyam-public [class~="hover:text-blue-700"]:hover,
+.seeyam-public [class~="hover:text-blue-800"]:hover,
+.seeyam-public [class~="hover:text-blue-900"]:hover,
+.seeyam-public [class~="text-amber-500"],
+.seeyam-public [class~="text-amber-600"],
+.seeyam-public [class~="text-amber-700"],
+.seeyam-public [class~="text-amber-800"],
+.seeyam-public [class~="text-amber-900"],
+.seeyam-public [class~="text-amber-950"],
+.seeyam-public [class~="text-blue-500"],
+.seeyam-public [class~="text-blue-500/30"],
+.seeyam-public [class~="text-blue-600"],
+.seeyam-public [class~="text-blue-700"],
+.seeyam-public [class~="text-blue-800"],
+.seeyam-public [class~="text-blue-900"],
+.seeyam-public [class~="text-cyan-800"],
+.seeyam-public [class~="text-emerald-600"],
+.seeyam-public [class~="text-emerald-700"],
+.seeyam-public [class~="text-indigo-500"],
+.seeyam-public [class~="text-indigo-600"],
+.seeyam-public [class~="text-orange-500"],
+.seeyam-public [class~="text-orange-600"],
+.seeyam-public [class~="text-orange-700"],
+.seeyam-public [class~="text-purple-800"],
+.seeyam-public [class~="text-purple-950"],
+.seeyam-public [class~="text-rose-600"],
+.seeyam-public [class~="text-rose-800"],
+.seeyam-public [class~="text-sky-800"],
+.seeyam-public [class~="text-sky-900"],
+.seeyam-public [class~="text-sky-950"],
+.seeyam-public [class~="text-teal-950"],
+.seeyam-public [class~="text-violet-950"] { color: #9c3700; }
+
+.seeyam-public .group:hover [class~="group-hover:border-amber-400"],
+.seeyam-public .group:hover [class~="group-hover:border-blue-300"],
+.seeyam-public .group:hover [class~="group-hover:border-blue-400"],
+.seeyam-public .group:hover [class~="group-hover:border-purple-400"],
+.seeyam-public .group:hover [class~="group-hover:border-sky-400"],
+.seeyam-public [class~="border-amber-200"],
+.seeyam-public [class~="border-amber-200/90"],
+.seeyam-public [class~="border-amber-300"],
+.seeyam-public [class~="border-amber-400"],
+.seeyam-public [class~="border-amber-400/30"],
+.seeyam-public [class~="border-amber-400/40"],
+.seeyam-public [class~="border-blue-100"],
+.seeyam-public [class~="border-blue-200"],
+.seeyam-public [class~="border-blue-200/60"],
+.seeyam-public [class~="border-blue-400"],
+.seeyam-public [class~="border-blue-400/30"],
+.seeyam-public [class~="border-blue-400/40"],
+.seeyam-public [class~="border-blue-400/60"],
+.seeyam-public [class~="border-cyan-200"],
+.seeyam-public [class~="border-cyan-400/30"],
+.seeyam-public [class~="border-cyan-400/40"],
+.seeyam-public [class~="border-cyan-400/50"],
+.seeyam-public [class~="border-emerald-100"],
+.seeyam-public [class~="border-emerald-100/70"],
+.seeyam-public [class~="border-emerald-200"],
+.seeyam-public [class~="border-emerald-400/20"],
+.seeyam-public [class~="border-emerald-400/40"],
+.seeyam-public [class~="border-orange-200"],
+.seeyam-public [class~="border-orange-300"],
+.seeyam-public [class~="border-orange-400"],
+.seeyam-public [class~="border-purple-200"],
+.seeyam-public [class~="border-purple-400/30"],
+.seeyam-public [class~="border-purple-400/40"],
+.seeyam-public [class~="border-rose-200"],
+.seeyam-public [class~="border-sky-200"],
+.seeyam-public [class~="border-sky-400/30"],
+.seeyam-public [class~="border-sky-400/40"],
+.seeyam-public [class~="hover:border-blue-300"]:hover,
+.seeyam-public [class~="hover:border-blue-400"]:hover,
+.seeyam-public [class~="hover:border-blue-400/40"]:hover,
+.seeyam-public [class~="hover:border-blue-400/50"]:hover,
+.seeyam-public [class~="hover:border-blue-400/60"]:hover,
+.seeyam-public [class~="hover:border-emerald-300"]:hover,
+.seeyam-public [class~="hover:border-emerald-400/50"]:hover { border-color: #f5c7a9; }
+
+.seeyam-public .group:hover [class~="group-hover:border-amber-500"],
+.seeyam-public [class~="border-amber-500"],
+.seeyam-public [class~="border-amber-500/20"],
+.seeyam-public [class~="border-amber-500/30"],
+.seeyam-public [class~="border-amber-500/50"],
+.seeyam-public [class~="border-blue-500"],
+.seeyam-public [class~="border-blue-500/20"],
+.seeyam-public [class~="border-blue-500/25"],
+.seeyam-public [class~="border-blue-500/30"],
+.seeyam-public [class~="border-blue-500/40"],
+.seeyam-public [class~="border-blue-500/50"],
+.seeyam-public [class~="border-blue-600"],
+.seeyam-public [class~="border-cyan-500/20"],
+.seeyam-public [class~="border-cyan-500/30"],
+.seeyam-public [class~="border-emerald-500/30"],
+.seeyam-public [class~="border-emerald-500/40"],
+.seeyam-public [class~="border-orange-500"],
+.seeyam-public [class~="border-purple-500"],
+.seeyam-public [class~="border-purple-500/20"],
+.seeyam-public [class~="border-purple-500/30"],
+.seeyam-public [class~="border-purple-500/50"],
+.seeyam-public [class~="border-sky-500"],
+.seeyam-public [class~="border-sky-500/20"],
+.seeyam-public [class~="border-sky-500/30"],
+.seeyam-public [class~="border-sky-500/50"],
+.seeyam-public [class~="border-teal-500/25"],
+.seeyam-public [class~="focus:border-blue-600"]:focus,
+.seeyam-public [class~="hover:border-blue-500"]:hover { border-color: #bd4608; }
+
+.seeyam-public .group:hover [class~="group-hover:bg-blue-600"],
+.seeyam-public [class~="bg-amber-400"],
+.seeyam-public [class~="bg-amber-500"],
+.seeyam-public [class~="bg-amber-600"],
+.seeyam-public [class~="bg-blue-500"],
+.seeyam-public [class~="bg-blue-600"],
+.seeyam-public [class~="bg-blue-700"],
+.seeyam-public [class~="bg-cyan-400"],
+.seeyam-public [class~="bg-cyan-500"],
+.seeyam-public [class~="bg-emerald-400"],
+.seeyam-public [class~="bg-emerald-500"],
+.seeyam-public [class~="bg-emerald-600"],
+.seeyam-public [class~="bg-indigo-600"],
+.seeyam-public [class~="bg-orange-500"],
+.seeyam-public [class~="bg-orange-600"],
+.seeyam-public [class~="bg-purple-400"],
+.seeyam-public [class~="hover:bg-amber-600"]:hover,
+.seeyam-public [class~="hover:bg-blue-600"]:hover,
+.seeyam-public [class~="hover:bg-blue-700"]:hover,
+.seeyam-public [class~="hover:bg-emerald-600"]:hover,
+.seeyam-public [class~="hover:bg-emerald-700"]:hover { background-color: #f56300; }
+
+.seeyam-public [class~="from-amber-400"],
+.seeyam-public [class~="from-amber-500"],
+.seeyam-public [class~="from-amber-500/10"],
+.seeyam-public [class~="from-blue-500/10"],
+.seeyam-public [class~="from-blue-600"],
+.seeyam-public [class~="from-blue-700"],
+.seeyam-public [class~="from-cyan-500"],
+.seeyam-public [class~="from-cyan-500/10"],
+.seeyam-public [class~="from-cyan-600"],
+.seeyam-public [class~="from-emerald-500"],
+.seeyam-public [class~="from-emerald-600"],
+.seeyam-public [class~="from-indigo-600"],
+.seeyam-public [class~="from-orange-500"],
+.seeyam-public [class~="from-orange-600"],
+.seeyam-public [class~="from-purple-500/10"],
+.seeyam-public [class~="from-purple-600"],
+.seeyam-public [class~="from-rose-500"],
+.seeyam-public [class~="from-sky-500"],
+.seeyam-public [class~="from-sky-500/10"],
+.seeyam-public [class~="hover:from-amber-500"]:hover,
+.seeyam-public [class~="hover:from-amber-600"]:hover,
+.seeyam-public [class~="hover:from-blue-500"]:hover,
+.seeyam-public [class~="hover:from-emerald-600"]:hover { --tw-gradient-from: #f56300 var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+
+.seeyam-public [class~="hover:to-amber-700"]:hover,
+.seeyam-public [class~="hover:to-indigo-500"]:hover,
+.seeyam-public [class~="hover:to-purple-600"]:hover,
+.seeyam-public [class~="hover:to-teal-600"]:hover,
+.seeyam-public [class~="hover:to-yellow-700"]:hover,
+.seeyam-public [class~="to-amber-500"],
+.seeyam-public [class~="to-amber-600"],
+.seeyam-public [class~="to-blue-500/10"],
+.seeyam-public [class~="to-blue-600"],
+.seeyam-public [class~="to-cyan-500"],
+.seeyam-public [class~="to-cyan-600"],
+.seeyam-public [class~="to-emerald-400"],
+.seeyam-public [class~="to-emerald-500"],
+.seeyam-public [class~="to-fuchsia-500/10"],
+.seeyam-public [class~="to-indigo-500"],
+.seeyam-public [class~="to-indigo-500/10"],
+.seeyam-public [class~="to-indigo-600"],
+.seeyam-public [class~="to-indigo-700"],
+.seeyam-public [class~="to-orange-500"],
+.seeyam-public [class~="to-orange-600"],
+.seeyam-public [class~="to-pink-500"],
+.seeyam-public [class~="to-rose-500"],
+.seeyam-public [class~="to-sky-400"],
+.seeyam-public [class~="to-sky-500"],
+.seeyam-public [class~="to-sky-500/10"],
+.seeyam-public [class~="to-teal-500"],
+.seeyam-public [class~="to-yellow-400"],
+.seeyam-public [class~="to-yellow-500"],
+.seeyam-public [class~="to-yellow-500/10"],
+.seeyam-public [class~="to-yellow-600"] { --tw-gradient-to: #f56300 var(--tw-gradient-to-position); }
+
+.seeyam-public [class~="hover:shadow-blue-500/10"]:hover,
+.seeyam-public [class~="hover:shadow-blue-600/50"]:hover,
+.seeyam-public [class~="hover:shadow-emerald-500/40"]:hover,
+.seeyam-public [class~="shadow-amber-500/20"],
+.seeyam-public [class~="shadow-amber-500/25"],
+.seeyam-public [class~="shadow-amber-500/30"],
+.seeyam-public [class~="shadow-blue-500/20"],
+.seeyam-public [class~="shadow-blue-500/5"],
+.seeyam-public [class~="shadow-blue-600/20"],
+.seeyam-public [class~="shadow-blue-600/25"],
+.seeyam-public [class~="shadow-blue-600/30"],
+.seeyam-public [class~="shadow-blue-900/10"],
+.seeyam-public [class~="shadow-emerald-500/20"],
+.seeyam-public [class~="shadow-emerald-600/25"],
+.seeyam-public [class~="shadow-orange-500"] { --tw-shadow-color: #ad4a1830; }
+
+.seeyam-public [class~="bg-amber-500/10"],
+.seeyam-public [class~="bg-amber-600/10"],
+.seeyam-public [class~="bg-blue-500/10"],
+.seeyam-public [class~="bg-blue-600/10"],
+.seeyam-public [class~="bg-cyan-500/10"],
+.seeyam-public [class~="bg-emerald-500/10"],
+.seeyam-public [class~="bg-indigo-500/10"],
+.seeyam-public [class~="bg-purple-500/10"],
+.seeyam-public [class~="bg-sky-500/10"] { background-color: #f563001a; }
+
+.seeyam-public .group:hover [class~="group-hover:text-blue-400"],
+.seeyam-public [class~="hover:text-amber-300"]:hover,
+.seeyam-public [class~="hover:text-amber-400"]:hover,
+.seeyam-public [class~="hover:text-blue-300"]:hover,
+.seeyam-public [class~="hover:text-blue-400"]:hover,
+.seeyam-public [class~="text-amber-300"],
+.seeyam-public [class~="text-amber-400"],
+.seeyam-public [class~="text-blue-300"],
+.seeyam-public [class~="text-blue-300/80"],
+.seeyam-public [class~="text-blue-400"],
+.seeyam-public [class~="text-cyan-300"],
+.seeyam-public [class~="text-cyan-300/80"],
+.seeyam-public [class~="text-cyan-400"],
+.seeyam-public [class~="text-emerald-300"],
+.seeyam-public [class~="text-emerald-400"],
+.seeyam-public [class~="text-indigo-400"],
+.seeyam-public [class~="text-orange-300"],
+.seeyam-public [class~="text-orange-400"],
+.seeyam-public [class~="text-pink-400"],
+.seeyam-public [class~="text-purple-300"],
+.seeyam-public [class~="text-purple-300/80"],
+.seeyam-public [class~="text-purple-400"],
+.seeyam-public [class~="text-sky-300"],
+.seeyam-public [class~="text-sky-300/80"],
+.seeyam-public [class~="text-sky-400"] { color: #ffae78; }
+
+.seeyam-public [class~="bg-amber-400/20"],
+.seeyam-public [class~="bg-amber-500/20"],
+.seeyam-public [class~="bg-blue-300/20"],
+.seeyam-public [class~="bg-blue-400/20"],
+.seeyam-public [class~="bg-blue-500/20"],
+.seeyam-public [class~="bg-cyan-400/20"],
+.seeyam-public [class~="bg-cyan-500/20"],
+.seeyam-public [class~="bg-emerald-300/20"],
+.seeyam-public [class~="bg-emerald-400/20"],
+.seeyam-public [class~="bg-purple-400/20"],
+.seeyam-public [class~="bg-purple-500/20"],
+.seeyam-public [class~="bg-sky-400/20"],
+.seeyam-public [class~="bg-sky-500/20"] { background-color: #f5630033; }
+
+.seeyam-public [class~="fill-amber-400"],
+.seeyam-public [class~="fill-orange-400"] { fill: #ffae78; }
+
+.seeyam-public [class~="from-indigo-950"] { --tw-gradient-from: #171717 var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+
+.seeyam-public [class~="via-blue-800"] { --tw-gradient-stops: var(--tw-gradient-from), #171717 var(--tw-gradient-via-position), var(--tw-gradient-to); }
+
+.seeyam-public [class~="bg-blue-800"],
+.seeyam-public [class~="hover:bg-blue-800"]:hover { background-color: #171717; }
+
+.seeyam-public [class~="focus:ring-blue-500/20"]:focus,
+.seeyam-public [class~="ring-amber-500/30"],
+.seeyam-public [class~="ring-blue-600/20"] { --tw-ring-color: #bd4608; }
+
+.seeyam-public [class~="text-amber-200/70"],
+.seeyam-public [class~="text-amber-200/90"],
+.seeyam-public [class~="text-blue-100"],
+.seeyam-public [class~="text-blue-200"],
+.seeyam-public [class~="text-blue-200/90"],
+.seeyam-public [class~="text-cyan-200/70"],
+.seeyam-public [class~="text-emerald-100/80"],
+.seeyam-public [class~="text-emerald-200/70"],
+.seeyam-public [class~="text-purple-200/70"],
+.seeyam-public [class~="text-sky-200/90"],
+.seeyam-public [class~="text-violet-50"] { color: #ffffff; }
+
+.seeyam-public [class~="bg-amber-400/15"],
+.seeyam-public [class~="bg-amber-500/15"] { background-color: #f5630026; }
+
+.seeyam-public [class~="hover:via-rose-500"]:hover,
+.seeyam-public [class~="via-amber-400"],
+.seeyam-public [class~="via-amber-500"],
+.seeyam-public [class~="via-blue-500"],
+.seeyam-public [class~="via-blue-600"],
+.seeyam-public [class~="via-fuchsia-600"],
+.seeyam-public [class~="via-indigo-500"],
+.seeyam-public [class~="via-indigo-600"],
+.seeyam-public [class~="via-pink-600"],
+.seeyam-public [class~="via-purple-600"],
+.seeyam-public [class~="via-rose-500"],
+.seeyam-public [class~="via-teal-500"],
+.seeyam-public [class~="via-teal-600"],
+.seeyam-public [class~="via-yellow-500"] { --tw-gradient-stops: var(--tw-gradient-from), #f56300 var(--tw-gradient-via-position), var(--tw-gradient-to); }
+
+.seeyam-public [class~="fill-amber-500"],
+.seeyam-public [class~="fill-orange-500"] { fill: #9c3700; }
+
+.seeyam-public [class~="bg-emerald-500/80"],
+.seeyam-public [class~="bg-yellow-500/80"] { background-color: #f56300cc; }
+
+.seeyam-public [class~="from-emerald-100/50"] { --tw-gradient-from: #fff2e8 var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+
+.seeyam-public [class~="to-blue-50/60"] { --tw-gradient-to: #fff2e8 var(--tw-gradient-to-position); }
+
+.seeyam-public [class~="ring-amber-400/40"],
+.seeyam-public [class~="ring-blue-400/40"],
+.seeyam-public [class~="ring-purple-400/40"],
+.seeyam-public [class~="ring-sky-400/40"] { --tw-ring-color: #f5c7a9; }
+.seeyam-public :is(button,a)[class~="bg-blue-600"],
+.seeyam-public :is(button,a)[class~="bg-blue-700"],
+.seeyam-public :is(button,a)[class~="from-amber-500"] { color: #101010; }
+.seeyam-public :is(button,a)[class~="hover:bg-blue-800"]:hover { color: #fff; }
+
+.seeyam-public .premiere-nav-brand { min-width: 0; }
+.seeyam-public .premiere-nav-brand .seeyam-mark { width: 2.35rem; height: 2.35rem; }
+.seeyam-public .premiere-nav-brand .seeyam-wordmark { font-size: 1.08rem; line-height: 1; }
+.seeyam-public .premiere-nav-brand .seeyam-tagline {
+  display: block;
+  margin-top: .25rem;
+  font-size: .47rem;
+  letter-spacing: .025em;
+}
+@media (min-width: 640px) {
+  .seeyam-public .premiere-nav-brand .seeyam-mark { width: 3rem; height: 3rem; }
+  .seeyam-public .premiere-nav-brand .seeyam-wordmark { font-size: 1.45rem; }
+  .seeyam-public .premiere-nav-brand .seeyam-tagline { font-size: .6rem; }
+}
+
+.seeyam-public .site-footer .seeyam-wordmark { color: #ff842f; }
+.site-footer-social[data-platform="facebook"] { --social-accent: #1877f2; }
+.site-footer-social[data-platform="instagram"] { --social-accent: #e1306c; }
+.site-footer-social[data-platform="linkedin"] { --social-accent: #4da3ed; }
+.site-footer-social[data-platform="youtube"] { --social-accent: #ff3434; }
+.site-footer-social[data-platform="x"] { --social-accent: #fff; }
+.seeyam-public .site-footer-social:is(:hover, :focus-visible) {
+  border-color: var(--social-accent, #fff);
+  color: var(--social-accent, #fff);
+}
+
+.seeyam-public .premiere-benefits { background: #fff; }
+.seeyam-public .premiere-benefits > div + div { border-color: #ececec; }
+
+/* Neutral surfaces for legacy public components. */
+.seeyam-public [class~="bg-[#071938]"],
+.seeyam-public [class~="bg-[#0f2956]"],
+.seeyam-public [class~="bg-[#102d64]"],
+.seeyam-public [class~="bg-[#123166]"],
+.seeyam-public [class~="bg-[#163d7e]"],
+.seeyam-public [class~="hover:bg-[#102d64]"]:hover,
+.seeyam-public [class~="hover:bg-[#163d7e]"]:hover { background-color: #202020; }
+.seeyam-public [class~="bg-slate-900"] { background-color: #171717; }
+.seeyam-public [class~="bg-[#071938]/70"] { background-color: #101010b3; }
+.seeyam-public [class~="bg-[#0b224d]/60"] { background-color: #21212199; }
+.seeyam-public [class~="bg-[#0b224d]/80"] { background-color: #212121cc; }
+.seeyam-public [class~="bg-blue-600/40"] { background-color: #f5630066; }
+.seeyam-public [class~="text-[#071938]"] { color: #171717; }
+.seeyam-public [class~="border-[#0f2956]"],
+.seeyam-public [class~="border-[#16356c]"],
+.seeyam-public [class~="border-[#1d4282]"],
+.seeyam-public [class~="border-[#1a4185]"] { border-color: #383838; }
+.seeyam-public [class~="from-[#071938]"] {
+  --tw-gradient-from: #101010 var(--tw-gradient-from-position);
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.seeyam-public [class~="to-[#0f2956]"],
+.seeyam-public [class~="to-[#0d2857]"] { --tw-gradient-to: #262626 var(--tw-gradient-to-position); }
+
+.seeyam-public .public-banner.public-banner--with-photo {
+  overflow: hidden;
+  background: #101010;
+}
+.public-banner-photo {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+}
+@media (min-width: 1024px) {
+  .seeyam-public .public-banner--with-photo {
+    padding-left: max(0px, calc((100% - 80rem) / 2));
+    padding-right: 44%;
+  }
+  .public-banner-photo {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 43%;
+    height: 100%;
+    pointer-events: none;
+  }
+}
+@media (max-width: 1023px) {
+  .seeyam-public .public-banner--with-photo { padding-bottom: 0; }
+  .public-banner-photo {
+    margin-top: 1.75rem;
+    height: clamp(12rem, 53vw, 23rem);
+  }
+}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useTransition } from "react";
 import {
   Star,
-  Sparkles,
+  CircleDot,
   Award,
   CheckCircle2,
   MessageSquarePlus,
@@ -88,7 +88,7 @@ export default function ReviewSection({ onOpenLeadModal }: ReviewSectionProps) {
         {/* Section Top Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold mb-3 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <CircleDot className="w-3.5 h-3.5 text-amber-400" />
             <span>Alumni Experiences & Student Ratings</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">

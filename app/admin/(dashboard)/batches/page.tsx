@@ -16,7 +16,7 @@ import {
   Edit2,
   Trash2,
   BookOpen,
-  Sparkles,
+  CircleDot,
   Layers,
 } from "lucide-react";
 import { useCatalogOptions } from "@/components/admin/CatalogOptions";
@@ -242,7 +242,7 @@ export default function BatchSchedulerPage() {
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
+              <CircleDot className="w-5 h-5" />
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ export interface AuthResponse {
 
 export async function loginAction(input: LoginInput): Promise<AuthResponse> {
   try {
-    if (process.env.NODE_ENV === "production" && !hasSecureAdminConfiguration) {
+    if (!hasSecureAdminConfiguration) {
       console.error("Staff sign-in configuration incomplete", {
         adminPassword: (process.env.ADMIN_PASSWORD?.length ?? 0) >= 12 ? "valid length" : "missing or too short",
         sessionSecret: (process.env.SESSION_SECRET?.length ?? 0) >= 32 ? "valid length" : "missing or too short",

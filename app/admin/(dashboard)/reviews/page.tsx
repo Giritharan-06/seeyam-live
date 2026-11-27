@@ -15,7 +15,7 @@ import {
   AlertCircle,
   Building2,
   GraduationCap,
-  Sparkles,
+  CircleDot,
   Calendar,
   Mail,
   User,

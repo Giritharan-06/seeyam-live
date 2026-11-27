@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Filter,
   CheckCircle2,
-  Sparkles,
+  CircleDot,
 } from "lucide-react";
 import { usePlatformData } from "@/components/PlatformDataContext";
 import { useLeadModal } from "@/components/LeadModalContext";

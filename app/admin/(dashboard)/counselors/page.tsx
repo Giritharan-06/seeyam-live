@@ -11,7 +11,8 @@ export default async function Counselors() {
   }).catch(() => null);
   const enabled = Boolean(accounts && hasSecureAdminConfiguration);
   return <><AdminHeader /><main className="mx-auto max-w-5xl space-y-5 p-4 md:p-8">
-    <h1 className="text-3xl font-bold">Counselors</h1>
+    <h1 className="text-3xl font-bold">Users &amp; Roles</h1>
+    <div className="grid gap-3 sm:grid-cols-2"><section className="rounded-xl border bg-white p-4"><h2 className="font-bold">Administrator</h2><p className="mt-1 text-sm text-slate-600">Manages website content, staff access, trainers, payments, reports and training operations.</p></section><section className="rounded-xl border bg-white p-4"><h2 className="font-bold">Counselor</h2><p className="mt-1 text-sm text-slate-600">Handles enquiries, students, enrolments, job openings, applications and placements. Can read staff announcements.</p></section></div>
     {!accounts ? <p role="alert">Counselor accounts could not be loaded. Check the database connection.</p> :
       !enabled && <p role="alert">Set ADMIN_PASSWORD and SESSION_SECRET to manage staff accounts.</p>}
     <section className="space-y-4 rounded-xl bg-white p-5"><h2 className="font-bold">Add counselor</h2>
